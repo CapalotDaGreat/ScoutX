@@ -90,3 +90,4 @@ export { startPlayerAnalysis, extractTrackingSegmentTask, discoverTrackingTask }
 export { explainTrackingMoment } from './analysis/trackingReasoning';
 export { startLinkImport, processLinkImportTask } from './uploads/linkImportJobs';
 export { reconcileTrackingAttempts } from './analysis/trackingReconciliation';
+export { readTrackingStorageV1 } from './analysis/trackingReader';

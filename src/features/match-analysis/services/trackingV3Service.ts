@@ -1,6 +1,8 @@
-import { decodeTrackingStorage } from '@/features/match-analysis/services/trackingStorage';
+import { TRACKING_STORAGE_ENCODING } from '@/features/match-analysis/services/trackingStorage';
+import { pollTrackingReader, type TrackingRead } from './trackingReader';
+import { onAuthStateChanged } from 'firebase/auth';
 import { doc, onSnapshot, type Unsubscribe } from 'firebase/firestore';
-import { getFirestoreDb, isFirebaseConfiguredForProject } from '@/config/firebase';
+import { getFirebaseAuth, getFirestoreDb, isFirebaseConfiguredForProject } from '@/config/firebase';
 import { createCallableFunction } from '@/firebase/callableFunctions';
 import { MATCH_ANALYSIS_COLLECTION } from '@/features/match-analysis/constants';
 import { createSecureId } from '@/utils/secureId';
@@ -9,29 +11,28 @@ export * from '@/features/match-analysis/services/trackingPresentation';
 import type { TrackingAnswer, TrackingDiscoveryDoc, TrackingDoc, TrackingProgressDoc } from '@/features/match-analysis/services/trackingPresentation';
 
 
-/** Decode at the listener boundary; an unsupported stored encoding cannot reach tuple-based UI code. */
-function readTrackingSnapshot<T>(snap: { exists(): boolean; data(): unknown }, onChange: (value: T | null) => void,
-  onError?: (error: Error) => void): void {
-  let value: T | null;
-  try { value = snap.exists() ? decodeTrackingStorage(snap.data()) as unknown as T : null; }
-  catch (error) {
+/** Each auth change cancels pending results before another account can receive them. */
+function subscribeCompatibleTracking(onChange: (value: TrackingRead | null) => void, jobId: string,
+  onError?: (error: Error) => void): Unsubscribe {
+  const auth = getFirebaseAuth();
+  if (!auth || !isFirebaseConfiguredForProject()) { onChange(null); return () => undefined; }
+  let stop = () => undefined as void;
+  const unsubscribe = onAuthStateChanged(auth, (user) => {
+    stop();
     onChange(null);
-    onError?.(error instanceof Error ? error : new Error('Invalid tracking storage'));
-    return;
-  }
-  onChange(value);
+    if (!user) return;
+    const callable = createCallableFunction<{ jobId: string; readerEncoding: string }>('readTrackingStorageV1');
+    if (!callable) { onError?.(new Error('Tracking reader unavailable')); return; }
+    stop = pollTrackingReader(async () => (await callable({ jobId, readerEncoding: TRACKING_STORAGE_ENCODING })).data,
+      onChange, onError);
+  }, (error) => { stop(); onChange(null); onError?.(error); });
+  return () => { unsubscribe(); stop(); };
 }
 
 /** Live discovery sightings (4.1): playable before the full analysis has a report. */
 export function subscribeTrackingDiscovery(jobId: string, onChange: (doc: TrackingDiscoveryDoc | null) => void,
   onError?: (e: Error) => void): Unsubscribe {
-  const db = getFirestoreDb();
-  if (!db || !isFirebaseConfiguredForProject()) {
-    onChange(null);
-    return () => undefined;
-  }
-  return onSnapshot(doc(db, MATCH_ANALYSIS_COLLECTION, jobId, 'tracking', 'discovery'),
-    (snap) => readTrackingSnapshot(snap, onChange, onError), onError);
+  return subscribeCompatibleTracking((value) => onChange(value?.discovery as unknown as TrackingDiscoveryDoc | null ?? null), jobId, onError);
 }
 
 /** Live progress facts of the progressive analysis (null when none was started). */
@@ -58,13 +59,7 @@ export async function startPlayerAnalysis(jobId: string): Promise<PlayerAnalysis
 }
 
 export function subscribeTracking(jobId: string, onChange: (doc: TrackingDoc | null) => void, onError?: (e: Error) => void): Unsubscribe {
-  const db = getFirestoreDb();
-  if (!db || !isFirebaseConfiguredForProject()) {
-    onChange(null);
-    return () => undefined;
-  }
-  return onSnapshot(doc(db, MATCH_ANALYSIS_COLLECTION, jobId, 'tracking', 'current'),
-    (snap) => readTrackingSnapshot(snap, onChange, onError), onError);
+  return subscribeCompatibleTracking((value) => onChange(value?.current as unknown as TrackingDoc | null ?? null), jobId, onError);
 }
 
 export async function answerTrackingQuestion(jobId: string, questionId: string, answer: TrackingAnswer): Promise<void> {

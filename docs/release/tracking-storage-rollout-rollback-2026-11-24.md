@@ -10,6 +10,13 @@ worker. Record exact immutable artifacts separately. The [CPU plan](cpu-producti
 [B-26 integration/capacity runbook](b26-integration-capacity-runbook-2026-11-23.md) and
 [storage/reconciliation contract](b26-final-attempt-reconciliation-2026-11-24.md) supply the other release gates.
 
+
+**Source enforcement update, 2026-11-24:** the current reader implementation supersedes direct app reads described
+for `c0d18f8`. Before any writers run, deploy and verify the restrictive Firestore rules and owner-checked
+`readTrackingStorageV1` callable in a separately approved scope. App report/discovery consumers now opt into that
+protocol instead of using Firestore snapshots. No enforcement has been deployed by this implementation task.
+See section 8 for the exact boundary, cost/freshness trade-off and rollback amendment.
+
 ## 1. Storage boundary and compatibility
 
 Writes to `matchAnalysisJobs/{jobId}/tracking/current` and `.../tracking/discovery` now carry the top-level marker
@@ -98,14 +105,16 @@ These commands are local checks, not deployment instructions. In a future valida
 ```powershell
 npm run typecheck
 npm run build --prefix functions
-node --import ./tests/unit/support/register.mjs --test tests/unit/trackingStorage.test.ts tests/unit/videoReasoning50.test.ts tests/unit/trackingResolve.test.ts tests/unit/trackingFollowUp52.test.ts tests/unit/trackingOrchestrator.test.ts tests/unit/trackingV3.test.ts tests/unit/trackingDeadlines.test.ts tests/unit/trackingReconciliation.test.ts
+node --import ./tests/unit/support/register.mjs --test tests/unit/trackingStorage.test.ts tests/unit/videoReasoning50.test.ts tests/unit/trackingResolve.test.ts tests/unit/trackingFollowUp52.test.ts tests/unit/trackingOrchestrator.test.ts tests/unit/trackingV3.test.ts tests/unit/trackingDeadlines.test.ts tests/unit/trackingReconciliation.test.ts tests/unit/trackingReader.test.ts
 npm run test:b26:integration
 ```
 
-The recorded source validation was 71 relevant unit tests and 18 Firestore-emulator cases, plus typechecks, build
-and targeted lint. The emulator runner uses loopback Firestore and `demo-scoutx`, injected clocks, synthetic worker
-responses and exact generated test ids. It proves local database behavior, not live delivery, capacity, identity or
-client rollout. This documentation task does not rerun those checks or the match benchmark.
+The recorded codec validation was 71 relevant unit tests and 18 Firestore-emulator cases, plus typechecks, build
+and targeted lint. Reader-enforcement validation on this source change reran typecheck, the functions build, the
+unit command above (76 tests), targeted lint, and the emulator suite (19 tests, standard edition, including
+negotiated-read denial). The emulator runner uses loopback Firestore and `demo-scoutx`, injected clocks, synthetic
+worker responses and exact generated test ids. It proves local database behavior, not live delivery, capacity,
+identity or client rollout. These checks do not rerun the match benchmark.
 
 Only after separate authorization, validate on isolated synthetic canary documents without real match inference.
 Exercise actual approved app builds and server consumers with these acceptance conditions:
@@ -184,3 +193,58 @@ cohort, executed versus NOT_RUN cases, marker inventory, monitoring observations
 status. A runbook, passing emulator suite or compatible local source does not establish an installed reader floor
 or safe production delivery. Storage readiness can close independently only for the accepted configuration/cohort;
 B-26 capacity/retry/live recovery and B-09 identity/approval conditions remain separate gates.
+
+
+## 8. Implemented compatible-reader protocol enforcement (source only)
+
+Direct Firestore reads of `tracking/current` and `tracking/discovery` are denied to **all client sessions**, even
+the job owner, regardless of marker presence or value. Collection listing cannot bypass that restriction. Client
+writes stay denied. Other owner-only tracking metadata, including progress, keeps its existing rule. Admin SDK
+server reads still work; audit server consumers separately. This restriction deliberately includes legacy/empty
+current and discovery data so a missing or unknown marker cannot become a compatibility bypass.
+
+`readTrackingStorageV1` is the only app read path for those two documents. It requires authentication, the exact
+`readerEncoding: "pitchproof.tracking.tuples.v1"` and a validated job id; unknown request fields are rejected.
+Its read transaction checks the current owner and obtains both documents consistently. The response carries the
+negotiated encoding and decoded tuple documents, or null for missing documents. Unknown/malformed storage fails
+the whole response without returning partial data. Requests from another owner or for a deleted/missing job are
+refused. The callable uses normal App Check/CORS defaults, a 30-second function limit, five-instance cap and a
+per-user limit of 1,200 requests/hour. These are source defaults, not deployed resource/cost measurements.
+
+Negotiation is **a request protocol contract, not cryptographic proof of an installed binary or decoder**. A client
+that explicitly implements/emulates this request may obtain its own data after ownership checks. It grants no
+account-wide capability claim, so a new phone's successful request does not authorize an old same-uid phone's
+Firestore listener. Old binaries that only use the old direct path cannot receive new server snapshots, including
+after their owner's other device negotiated v1. Do not describe a self-reported app version or protocol field as
+build attestation. If verified build admission is required, that is a separate reviewed control.
+
+The app uses auth-scoped polling, not Firestore snapshots, for these reports/sightings. Each subscriber requests
+both documents immediately, then waits 15 seconds after completion before the next read; there is no overlapping
+request within a subscription. Errors clear the value, surface through the error callback and back off to at most
+five minutes; a successful response resets the interval. Unsubscribe and auth changes discard in-flight results
+and cancel timers. No raw Firestore fallback or persistent tracking cache is added. Report and discovery
+subscriptions are independent: two mounted listeners can make about 480 calls/hour for one job, plus startup,
+reconnects and other devices, against the same user quota. Evaluate that callable/Firestore read-write cost and
+15-second freshness before rollout; progress remains on its direct Firestore listener. This task does not enable
+billing or authorize live polling. Offline failures are unavailable/error states, not invented cached results.
+
+Rules cannot revoke bytes already cached by a previously deployed reader. Before expanding an environment that
+already exposed v1 documents, inventory old cached/offline sessions and apply the separately approved client/cache
+upgrade plan. Do not claim new server denial erases downloaded data or stops arbitrary old local code rendering it.
+
+Amended rollout order: quiesce writers; deploy/verify the restrictive rules first; deploy the compatible callable
+and server consumers while writers stay quiescent; distribute the updated app and verify auth/protocol/decoding;
+then permit only approved canary writers. A mixed window may make old clients unavailable, which is preferable to
+sending them incompatible rows. Missing callable or restrictive rules means BLOCKED; never enable a direct-read
+fallback to bridge that window. Rule deployment remains mandatory because Admin writes bypass Firestore rules.
+
+Amended rollback: retain the restrictive rules and a decoder-compatible callable for documents that may contain
+v1. If the compatible API cannot remain available, keep the feature unavailable. Do not restore broad direct reads
+or old listeners to recover availability. No data migration or new retry budget is implied. Installed-client,
+Scheduler/Tasks recovery, capacity and B-09 identity gates remain separate.
+
+Regression evidence includes protocol opt-in on every read, cross-owner/unauthenticated rejection, missing and
+future encodings, direct/list denial, same-uid old-device denial after a successful opt-in, legacy/null responses,
+client response validation, in-flight cancellation and the existing publication/takeover/round-trip cases. Local
+unit/emulator evidence does not establish deployed rules, binary attestation or live capacity. All operational
+execution remains separately authorized; billing stays unlinked during source preparation.

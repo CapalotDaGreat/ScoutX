@@ -132,3 +132,9 @@ independent identity and approved rollout requirements remain outstanding. No fo
 The [compatible reader/writer rollout and rollback runbook](tracking-storage-rollout-rollback-2026-11-24.md)
 records the reader floor, bundled-writer quiescence, canary checks and decoder-preserving rollback prerequisites.
 It is prepared only; no rollout, data rewrite or billing linkage is authorized.
+
+
+Reader enforcement is now implemented in source: report/discovery direct reads are denied, and the auth-scoped app
+negotiates `readTrackingStorageV1` per request. See section 8 of the rollout runbook for rules-first sequencing,
+legacy-client/cache limitations, polling cost/freshness and decoder-preserving rollback. This is protocol
+negotiation, not binary attestation or an account-wide version grant. Nothing has been deployed or enabled.

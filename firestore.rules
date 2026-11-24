@@ -706,6 +706,8 @@ service cloud.firestore {
       match /{sub}/{docId} {
         allow read: if isSignedIn()
           && sub in ['segmentReviews', 'cvSegments', 'reports', 'corrections', 'tracking']
+          // current/discovery are protocol-negotiated through readTrackingStorageV1, even for owners.
+          && !(sub == 'tracking' && docId in ['current', 'discovery'])
           && get(/databases/$(database)/documents/matchAnalysisJobs/$(jobId)).data.playerId == request.auth.uid;
         allow write: if false;
       }

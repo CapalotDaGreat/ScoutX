@@ -5,7 +5,7 @@ import { after, afterEach, before, beforeEach, test as nodeTest } from 'node:tes
 import { createRequire } from 'node:module';
 import { readFileSync } from 'node:fs';
 import { randomUUID } from 'node:crypto';
-import { PROJECT_ID, getDocument, setDocument } from './emulator.mjs';
+import { PROJECT_ID, getDocument, setDocument, tokenFor } from './emulator.mjs';
 
 // Fail before Admin initialization if this file is invoked outside a loopback emulator.
 assert.match(process.env.FIRESTORE_EMULATOR_HOST ?? '', /^(127\.0\.0\.1|localhost|\[::1\]):\d+$/,
@@ -19,7 +19,8 @@ const { reconcileTrackingAttempt, sweepTrackingAttempts } = require('./lib/analy
 const { processResolveTask, runResolveTaskAttempt, processOcrFollowUpTask, answerTrackingQuestion } = require('./lib/analysis/trackingCallables.js');
 const { TRACKING_ATTEMPT_LEASE_MS, RESOLVE_MAX_ATTEMPTS, OCR_REFRESH_MAX_ATTEMPTS } = require('./lib/analysis/trackingDeadlines.js');
 const { newProgress, planDiscovery } = require('./lib/analysis/trackingProgress.js');
-const { encodeTrackingStorage, decodeTrackingStorage } = require('./lib/analysis/trackingStorage.js');
+const { readCompatibleTracking, readTrackingStorageV1 } = require('./lib/analysis/trackingReader.js');
+const { encodeTrackingStorage, decodeTrackingStorage, TRACKING_STORAGE_ENCODING } = require('./lib/analysis/trackingStorage.js');
 const { processDiscoverTask } = require('./lib/analysis/trackingOrchestrator.js');
 const { VIDEO_CONSENT_VERSION } = require('./lib/analysis/videoConsent.js');
 const { parseTrackingReport, parseDiscoveryMoments, answerTarget } = require('./lib/analysis/trackingV3.js');
@@ -342,4 +343,45 @@ test('identity-answer callable decodes a stored moment back into the original pi
     else process.env.TRACKING_V3_ENABLED = flag;
     await consent.delete();
   }
+});
+
+
+test('v1 readers must negotiate the callable protocol; direct owner/old-device and collection reads are denied', async () => {
+  const raw = reply();
+  const report = parseTrackingReport(raw.report, raw.timeline);
+  await base.doc('current').set(encodeTrackingStorage({ report, version: 1 }));
+  await base.doc('discovery').set(encodeTrackingStorage({ moments: report.moments, generation: 1 }));
+  for (const id of ['current', 'discovery']) {
+    const path = `matchAnalysisJobs/${jobId}/tracking/${id}`;
+    assert.equal(await getDocument('b26-emulator-owner', path), 403, 'same owner on an old device gets no raw v1 data');
+    assert.equal(await getDocument(null, path), 403);
+    assert.equal(await getDocument('other-owner', path), 403);
+    assert.equal(await setDocument('b26-emulator-owner', path, { report: {} }), 403);
+  }
+  const list = await fetch(`http://${process.env.FIRESTORE_EMULATOR_HOST}/v1/projects/${PROJECT_ID}/databases/(default)/documents/matchAnalysisJobs/${jobId}/tracking`,
+    { headers: { Authorization: `Bearer ${tokenFor('b26-emulator-owner')}` } });
+  assert.equal(list.status, 403, 'listing the tracking collection must not bypass the read API');
+  const request = { jobId, readerEncoding: TRACKING_STORAGE_ENCODING };
+  await assert.rejects(readCompatibleTracking(db, undefined, request), (error) => error.code === 'unauthenticated');
+  await assert.rejects(readCompatibleTracking(db, 'other-owner', request), (error) => error.code === 'permission-denied');
+  await assert.rejects(readCompatibleTracking(db, 'b26-emulator-owner', { jobId }), (error) => error.code === 'failed-precondition');
+  const result = await readCompatibleTracking(db, 'b26-emulator-owner', request);
+  assert.deepEqual(result.current.report, report);
+  assert.deepEqual(result.discovery.moments, report.moments);
+  const quota = db.collection('callableRateLimits').doc(rateLimitDocId('b26-emulator-owner', 'tracking_reader_v1', 'hour'));
+  try {
+    const call = { auth: { uid: 'b26-emulator-owner', token: {} }, data: request,
+      rawRequest: { headers: {} }, acceptsStreaming: false };
+    assert.deepEqual(await readTrackingStorageV1.run(call), result, 'actual callable uses the negotiated owner helper');
+    await quota.set({ count: 1200 });
+    await assert.rejects(readTrackingStorageV1.run(call), (error) => error.code === 'resource-exhausted');
+  } finally { await quota.delete(); }
+  // A successful opt-in does not authorize another same-uid session's legacy read path.
+  assert.equal(await getDocument('b26-emulator-owner', `matchAnalysisJobs/${jobId}/tracking/current`), 403);
+  assert.equal(await getDocument('b26-emulator-owner', `matchAnalysisJobs/${jobId}/tracking/progress`), 200);
+  await base.doc('current').set({ report: null, version: 0 });
+  assert.equal((await readCompatibleTracking(db, 'b26-emulator-owner', request)).current.report, null);
+  assert.equal(await getDocument('b26-emulator-owner', `matchAnalysisJobs/${jobId}/tracking/current`), 403, 'no unmarked-data bypass');
+  await base.doc('current').set({ tupleEncoding: 'future' });
+  await assert.rejects(readCompatibleTracking(db, 'b26-emulator-owner', request), (error) => error.code === 'failed-precondition');
 });

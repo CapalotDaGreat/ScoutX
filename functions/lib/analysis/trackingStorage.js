@@ -1,9 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.TRACKING_STORAGE_ENCODING = void 0;
 exports.encodeTrackingStorage = encodeTrackingStorage;
 exports.decodeTrackingStorage = decodeTrackingStorage;
 /** Mirrored app/server storage boundary; tuple arrays remain the in-memory/worker contract. */
-const ENCODING = 'pitchproof.tracking.tuples.v1';
+exports.TRACKING_STORAGE_ENCODING = 'pitchproof.tracking.tuples.v1';
 const STATES = ['CONFIRMED_VISIBLE', 'LIKELY_VISIBLE', 'AMBIGUOUS', 'OFF_CAMERA', 'CONFIRMED_OFF_PITCH', 'NON_MATCH_PERIOD', 'UNKNOWN'];
 const object = (value) => !!value && typeof value === 'object' && !Array.isArray(value);
 const finite = (value) => typeof value === 'number' && Number.isFinite(value);
@@ -40,7 +41,7 @@ function moments(value, encode) {
 function convert(input, encode) {
     if (!object(input))
         throw new Error('Invalid tracking document');
-    if (input.tupleEncoding !== undefined && input.tupleEncoding !== ENCODING)
+    if (input.tupleEncoding !== undefined && input.tupleEncoding !== exports.TRACKING_STORAGE_ENCODING)
         throw new Error('Unknown tracking tuple encoding');
     const out = { ...input };
     if (object(input.report)) {
@@ -51,7 +52,7 @@ function convert(input, encode) {
     if ('moments' in input)
         out.moments = moments(input.moments, encode);
     if (encode)
-        out.tupleEncoding = ENCODING;
+        out.tupleEncoding = exports.TRACKING_STORAGE_ENCODING;
     else
         delete out.tupleEncoding;
     return out;
