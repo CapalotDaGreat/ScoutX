@@ -51,7 +51,7 @@ wait, HTTP 429/503 responses and retry exhaustion in this check.
    cases cover owner/lifecycle fencing and concurrent transactions. Live scheduler delivery, outage/backlog recovery
    and killed-process behavior still need separately authorized validation. The nested-array report-persistence
    blocker is fixed locally with populated indicator/state-strip round trips; compatible reader/writer rollout
-   remains required, as documented in that contract.
+   remains required; use the prepared [reader/writer rollout and rollback protocol](tracking-storage-rollout-rollback-2026-11-24.md).
    Lease expiry alone does not run the sweep.
 
 ## 2. Evidence bundle and execution order

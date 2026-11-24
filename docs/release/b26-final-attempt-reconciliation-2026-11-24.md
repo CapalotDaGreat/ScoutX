@@ -127,3 +127,8 @@ Local validation: 71 relevant unit tests plus the 18-case Firestore-emulator sui
 build and targeted lint. Real reports now successfully publish through the real parser/publication transaction with
 synthetic recorded payloads and exact server/app decode comparisons; the live Scheduler/Cloud Tasks, capacity,
 independent identity and approved rollout requirements remain outstanding. No footage inference or benchmark rerun.
+
+
+The [compatible reader/writer rollout and rollback runbook](tracking-storage-rollout-rollback-2026-11-24.md)
+records the reader floor, bundled-writer quiescence, canary checks and decoder-preserving rollback prerequisites.
+It is prepared only; no rollout, data rewrite or billing linkage is authorized.
