@@ -1,3 +1,4 @@
+import { decodeTrackingStorage } from './trackingStorage';
 /**
  * 5.0 callable: explain one confirmed clip (see videoReasoning.ts for the rules). Returns
  *   { status: 'answered', answer, cached }       - validated model answer (or cached one)
@@ -61,7 +62,7 @@ export async function explainMoment(uid: string, jobId: string, momentId: string
   if (job.playerId !== uid) throw new HttpsError('permission-denied', 'Only the owner can use this.');
   const base = db.collection(MATCH_COLLECTION).doc(jobId).collection(TRACKING_COLLECTION);
   const cur = await base.doc('current').get();
-  const report = (cur.get('report') ?? null) as TrackingReport | null;
+  const report = (decodeTrackingStorage(cur.data() ?? {}).report ?? null) as TrackingReport | null;
   const version = Number(cur.get('version') ?? 0);
   if (!report || cur.get('stale') === true) return { status: 'unavailable', reason: 'report_not_current' };
   const moment = (report.moments ?? []).find((m) => m.id === momentId) ?? null;

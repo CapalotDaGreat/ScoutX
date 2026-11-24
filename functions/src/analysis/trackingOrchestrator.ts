@@ -1,3 +1,4 @@
+import { encodeTrackingStorage, decodeTrackingStorage } from './trackingStorage';
 /**
  * Video Intelligence 4.0 - progressive, resumable player analysis.
  *
@@ -269,7 +270,7 @@ async function finishDiscovery(db: Firestore, jobId: string, generation: number,
   const docRef = db.collection(MATCH_COLLECTION).doc(jobId).collection(TRACKING_COLLECTION).doc(DISCOVERY_COLLECTION_DOC);
   const next = await db.runTransaction(async (tx) => {
     const prog = (await tx.get(ref)).data() as TrackingProgress | undefined;
-    const cur = (await tx.get(docRef)).data() as { moments?: TrackingMoment[] } | undefined;
+    const cur = decodeTrackingStorage((await tx.get(docRef)).data() ?? {}) as { moments?: TrackingMoment[] };
     if (!prog?.discovery || prog.generation !== generation) return null;
     const d: DiscoveryProgress = { ...prog.discovery, state: { ...prog.discovery.state,
       [String(index)]: { status, attempts: (prog.discovery.state[String(index)]?.attempts ?? 0) + 1, doneAt: at,
@@ -282,7 +283,7 @@ async function finishDiscovery(db: Firestore, jobId: string, generation: number,
     const finished = discoveryFinished(d);
     const queueExtraction = finished && !d.extractionQueued;
     if (queueExtraction) d.extractionQueued = true;
-    tx.set(docRef, { moments: merged, generation, updatedAt: at });
+    tx.set(docRef, encodeTrackingStorage({ moments: merged, generation, updatedAt: at }));
     tx.set(ref, { discovery: d, updatedAt: at }, { merge: true });
     const pending = prog.plan.map((s) => s.index).filter((i) => prog.segments[String(i)]?.status !== 'done');
     return { first, queueExtraction, order: prioritisedSegments(prog.plan, d.sightingTimes).filter((i) => pending.includes(i)) };

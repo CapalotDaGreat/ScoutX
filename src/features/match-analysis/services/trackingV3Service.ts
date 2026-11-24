@@ -1,3 +1,4 @@
+import { decodeTrackingStorage } from '@/features/match-analysis/services/trackingStorage';
 import { doc, onSnapshot, type Unsubscribe } from 'firebase/firestore';
 import { getFirestoreDb, isFirebaseConfiguredForProject } from '@/config/firebase';
 import { createCallableFunction } from '@/firebase/callableFunctions';
@@ -6,6 +7,20 @@ import { createSecureId } from '@/utils/secureId';
 
 export * from '@/features/match-analysis/services/trackingPresentation';
 import type { TrackingAnswer, TrackingDiscoveryDoc, TrackingDoc, TrackingProgressDoc } from '@/features/match-analysis/services/trackingPresentation';
+
+
+/** Decode at the listener boundary; an unsupported stored encoding cannot reach tuple-based UI code. */
+function readTrackingSnapshot<T>(snap: { exists(): boolean; data(): unknown }, onChange: (value: T | null) => void,
+  onError?: (error: Error) => void): void {
+  let value: T | null;
+  try { value = snap.exists() ? decodeTrackingStorage(snap.data()) as unknown as T : null; }
+  catch (error) {
+    onChange(null);
+    onError?.(error instanceof Error ? error : new Error('Invalid tracking storage'));
+    return;
+  }
+  onChange(value);
+}
 
 /** Live discovery sightings (4.1): playable before the full analysis has a report. */
 export function subscribeTrackingDiscovery(jobId: string, onChange: (doc: TrackingDiscoveryDoc | null) => void,
@@ -16,7 +31,7 @@ export function subscribeTrackingDiscovery(jobId: string, onChange: (doc: Tracki
     return () => undefined;
   }
   return onSnapshot(doc(db, MATCH_ANALYSIS_COLLECTION, jobId, 'tracking', 'discovery'),
-    (snap) => onChange(snap.exists() ? (snap.data() as TrackingDiscoveryDoc) : null), onError);
+    (snap) => readTrackingSnapshot(snap, onChange, onError), onError);
 }
 
 /** Live progress facts of the progressive analysis (null when none was started). */
@@ -49,7 +64,7 @@ export function subscribeTracking(jobId: string, onChange: (doc: TrackingDoc | n
     return () => undefined;
   }
   return onSnapshot(doc(db, MATCH_ANALYSIS_COLLECTION, jobId, 'tracking', 'current'),
-    (snap) => onChange(snap.exists() ? (snap.data() as TrackingDoc) : null), onError);
+    (snap) => readTrackingSnapshot(snap, onChange, onError), onError);
 }
 
 export async function answerTrackingQuestion(jobId: string, questionId: string, answer: TrackingAnswer): Promise<void> {

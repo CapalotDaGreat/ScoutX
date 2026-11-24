@@ -1,3 +1,4 @@
+import { encodeTrackingStorage } from '../../functions/src/analysis/trackingStorage.ts';
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import {
@@ -71,14 +72,14 @@ test('5.0 explainMoment: gated, cached per report version, rejected answers neve
   const report = { target: { number: '20', kit: 'orange', position: 'winger', kit2: '' }, moments: [moment], offball: null };
   const seed = {
     'matchAnalysisJobs/job_1': { playerId: 'u1', videoStoragePath: 'profiles/u1/matchFootage/job_1/v.mov' },
-    'matchAnalysisJobs/job_1/tracking/current': { report, version: 4, stale: false },
+    'matchAnalysisJobs/job_1/tracking/current': encodeTrackingStorage({ report, version: 4, stale: false }),
     'videoProcessingConsents/job_1': { uid: 'u1', providers: ['openrouter_zdr'], revokedAt: null, policyVersion: VIDEO_CONSENT_VERSION },
   };
   let chats = 0;
   let framesAsked = 0;
   const deps = (db: Firestore, content: string, env: NodeJS.ProcessEnv = { ...ON, FUNCTIONS_EMULATOR: 'true' }) => ({
     db, env, aiConsent: async () => true, now: () => '2026-10-27T12:00:00Z', sourceUrl: async () => 'https://signed/v.mov',
-    frames: async () => { framesAsked += 1; return { frames: [{ id: 'f0', t: 32, jpegBase64: 'AAAA' }, { id: 'f1', t: 35, jpegBase64: 'BBBB' }] }; },
+    frames: async (input: unknown) => { assert.deepEqual((input as { indicator: unknown }).indicator, (moment as { indicator: unknown }).indicator); framesAsked += 1; return { frames: [{ id: 'f0', t: 32, jpegBase64: 'AAAA' }, { id: 'f1', t: 35, jpegBase64: 'BBBB' }] }; },
     chat: async () => { chats += 1; return { ok: true as const, content }; },
   });
   const good = JSON.stringify({ observation: 'You hold your width near the touchline.', interpretation: 'That can stretch the defence.',

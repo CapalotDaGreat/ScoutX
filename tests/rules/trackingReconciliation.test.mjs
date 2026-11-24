@@ -1,3 +1,4 @@
+import { decodeTrackingStorage as appDecode } from '../../src/features/match-analysis/services/trackingStorage.ts';
 /** B-26 real Firestore transactions; synthetic worker replies, no inference or cloud access. */
 import assert from 'node:assert/strict';
 import { after, afterEach, before, beforeEach, test as nodeTest } from 'node:test';
@@ -15,9 +16,13 @@ const { initializeApp, deleteApp } = require('firebase-admin/app');
 const { getFirestore } = require('firebase-admin/firestore');
 const { claimTrackingTask, releaseTrackingTask, RECONCILIATION_COLLECTION } = require('./lib/analysis/trackingTaskLeases.js');
 const { reconcileTrackingAttempt, sweepTrackingAttempts } = require('./lib/analysis/trackingReconciliation.js');
-const { processResolveTask, runResolveTaskAttempt, processOcrFollowUpTask } = require('./lib/analysis/trackingCallables.js');
+const { processResolveTask, runResolveTaskAttempt, processOcrFollowUpTask, answerTrackingQuestion } = require('./lib/analysis/trackingCallables.js');
 const { TRACKING_ATTEMPT_LEASE_MS, RESOLVE_MAX_ATTEMPTS, OCR_REFRESH_MAX_ATTEMPTS } = require('./lib/analysis/trackingDeadlines.js');
-const { newProgress } = require('./lib/analysis/trackingProgress.js');
+const { newProgress, planDiscovery } = require('./lib/analysis/trackingProgress.js');
+const { encodeTrackingStorage, decodeTrackingStorage } = require('./lib/analysis/trackingStorage.js');
+const { processDiscoverTask } = require('./lib/analysis/trackingOrchestrator.js');
+const { VIDEO_CONSENT_VERSION } = require('./lib/analysis/videoConsent.js');
+const { parseTrackingReport, parseDiscoveryMoments, answerTarget } = require('./lib/analysis/trackingV3.js');
 const { emptyFeedback } = require('./lib/analysis/trackingV3.js');
 const { setEmulatorCvApproval } = require('./lib/analysis/cvConfig.js');
 const { rateLimitDocId } = require('./lib/security/rateLimit.js');
@@ -49,11 +54,8 @@ function deferred() {
 function reply() {
   const report = structuredClone(fixture);
   report.engine = { ...report.engine, ocrDeferred: 0 };
-  // Keep the successful-publication fixture Firestore-compatible. The unmodified
-  // nested indicator payload has a separate explicit failure/recovery test below.
-  report.moments = report.moments.map((moment) => ({ ...moment, indicator: [] }));
   report.analysedRange = { startSec: 0, endSec: 2035, parts: newProgress(1, 2035, '').plan.length };
-  return { workerVersion: APPROVAL.workerVersion, models: APPROVAL.models, report };
+  return { workerVersion: APPROVAL.workerVersion, models: APPROVAL.models, report, timeline: structuredClone(JSON.parse(readFileSync(new URL('../fixtures/tracking50-img4809-auto.json', import.meta.url), 'utf8')).timeline) };
 }
 async function claim(scope = 'full', client = db, attempt = scope === 'refresh' ? OCR_REFRESH_MAX_ATTEMPTS - 1 : RESOLVE_MAX_ATTEMPTS - 1) {
   const lease = await claimTrackingTask(client, jobId, 0, scope, scope === 'refresh' ? 1 : undefined, now, attempt);
@@ -67,7 +69,7 @@ async function owned(scope = 'full') {
 }
 
 before(() => {
-  apps = [0, 1].map((i) => initializeApp({ projectId: PROJECT_ID }, `b26-${process.pid}-${i}`));
+  apps = [initializeApp({ projectId: PROJECT_ID }), initializeApp({ projectId: PROJECT_ID }, `b26-${process.pid}-peer`)];
   clients = apps.map((app) => getFirestore(app));
   [db] = clients;
 });
@@ -270,18 +272,74 @@ test('publication transaction fences takeover after preflight, while an image wr
 });
 
 
-test('real Firestore nested-indicator publication failure retains final recovery and cannot replace current report', async () => {
+test('populated indicators and state strips publish and round-trip to server and app without loss', async () => {
   const raw = reply();
-  raw.report.moments = structuredClone(fixture.moments);
-  const before = await snapshot(base.doc('current'));
-  await assert.rejects(runResolveTaskAttempt(db, jobId, 0, async () => raw, ENV, store,
-    { ...options(), attempt: RESOLVE_MAX_ATTEMPTS - 1 }),
-  (error) => error.code === 3 && /invalid nested entity/i.test(error.message));
-  assert.deepEqual(await snapshot(base.doc('current')), before);
-  const lease = await snapshot(base.doc('lease_full'));
-  tokens.add(lease.token);
-  assert.equal((await ticket(lease.token).get()).exists, true);
+  const expected = parseTrackingReport(raw.report, raw.timeline);
+  assert.ok(expected.stateStrip.length && expected.moments.some((m) => m.indicator.length));
+  assert.equal(await runResolveTaskAttempt(db, jobId, 0, async () => raw, ENV, store,
+    { ...options(), attempt: RESOLVE_MAX_ATTEMPTS - 1 }), 'done');
+  const stored = await snapshot(base.doc('current'));
+  assert.equal(stored.tupleEncoding, 'pitchproof.tracking.tuples.v1');
+  assert.ok(!Array.isArray(stored.report.stateStrip[0]));
+  assert.ok(!Array.isArray(stored.report.moments[0].indicator[0]));
+  assert.deepEqual(decodeTrackingStorage(stored).report, expected);
+  assert.deepEqual(appDecode(stored).report, expected);
+  const token = (await snapshot(base.doc('lease_full'))).token;
+  assert.equal(token, null);
   clock = EXPIRED;
-  assert.equal(await reconcileTrackingAttempt(db, lease.token, now()), 'settled');
-  assert.equal((await snapshot(base.doc('progress'))).outcome, 'interrupted');
+  await sweepTrackingAttempts(db, now());
+  assert.deepEqual(await snapshot(base.doc('current')), stored);
+  assert.equal((await snapshot(base.doc('progress'))).outcome, null);
+});
+
+
+test('real discovery writer appends and re-encodes sightings without losing prior indicators', async () => {
+  await job.update({ videoStoragePath: `profiles/b26-emulator-owner/matchFootage/${jobId}/source.mp4` });
+  await base.doc('progress').update({ discovery: planDiscovery(2035) });
+  const raw = (t) => ({ id: `d_${t}`, kind: 'sighting', evidence: 'number_read', identityState: 'CONFIRMED_VISIBLE',
+    number: '20', readFrames: 2, start: t, clipStart: Math.max(0, t - 2), clipEnd: t + 2,
+    indicator: [[t, 0.123456789, 0.2, 0.3, 0.4]] });
+  const first = parseDiscoveryMoments([raw(1)], { startSec: 0, endSec: 600 }, 2035, '20')[0];
+  const legacy = { moments: [{ ...first, indicator: [] }], generation: 1, updatedAt: now().toISOString() };
+  await base.doc('discovery').set(legacy);
+  assert.deepEqual(appDecode(await snapshot(base.doc('discovery'))), legacy);
+  const expected = [...legacy.moments];
+  for (const [index, t] of [[0, 10], [1, 620]]) {
+    assert.equal(await processDiscoverTask(db, jobId, 1, index, 0,
+      async () => ({ status: 'complete', moments: [raw(t)] }), async () => { effects.enqueue += 1; }, ENV,
+      async () => 'https://synthetic.invalid/source', now, options().notify, store), 'done');
+    expected.push(...parseDiscoveryMoments([raw(t)], { startSec: index * 600, endSec: (index + 1) * 600 }, 2035, '20'));
+    const stored = await snapshot(base.doc('discovery'));
+    assert.equal(stored.tupleEncoding, 'pitchproof.tracking.tuples.v1');
+    assert.deepEqual(appDecode(stored).moments, expected);
+    assert.deepEqual(decodeTrackingStorage(stored).moments, expected);
+  }
+});
+
+
+test('identity-answer callable decodes a stored moment back into the original pixel point', async () => {
+  const raw = reply();
+  const parsed = parseTrackingReport(raw.report, raw.timeline);
+  await base.doc('current').set(encodeTrackingStorage({ report: parsed, version: 4, stale: false, feedbackRevision: 0 }));
+  const consent = db.collection('videoProcessingConsents').doc(jobId);
+  await consent.set({ uid: 'b26-emulator-owner', revokedAt: null, policyVersion: VIDEO_CONSENT_VERSION });
+  const flag = process.env.TRACKING_V3_ENABLED;
+  delete process.env.TRACKING_V3_ENABLED; // Guarantee no Cloud Tasks enqueue while exercising the actual callable.
+  try {
+    const moment = parsed.moments.find((m) => m.indicator.length);
+    const point = answerTarget(parsed, moment.id);
+    assert.ok(point);
+    const result = await answerTrackingQuestion.run({ auth: { uid: 'b26-emulator-owner', token: {} },
+      data: { jobId, questionId: moment.id, answer: 'yes', operationId: 'storage-regression-answer' },
+      rawRequest: { headers: {} }, acceptsStreaming: false });
+    assert.equal(result.pending, 'worker_unavailable');
+    const feedback = await snapshot(base.doc('feedback'));
+    assert.deepEqual(feedback.entries[0].point, point.point);
+    assert.equal(feedback.entries[0].t, point.t);
+    assert.deepEqual(appDecode(await snapshot(base.doc('current'))).report, parsed);
+  } finally {
+    if (flag === undefined) delete process.env.TRACKING_V3_ENABLED;
+    else process.env.TRACKING_V3_ENABLED = flag;
+    await consent.delete();
+  }
 });

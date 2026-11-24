@@ -80,7 +80,7 @@ services, Storage emulator, provider calls, footage or actual inference are used
 not the unit suite's fake database. Generated job ids and their exact ticket ids are cleaned up without a global
 emulator database reset. Emulators are stopped by `emulators:exec` on completion.
 
-The 16 integration cases cover expiry-boundary settlement, duplicate reconcilers, simultaneous final claims,
+The integration cases cover expiry-boundary settlement, duplicate reconcilers, simultaneous final claims,
 competing expired-lease takeovers, concurrent new-generation takeover versus old reconciliation, full and OCR
 late-result fencing, version-preserving publication, expired-owner rejection, round-only failure and quota
 preservation, feedback/new-round/same-generation-resume/cancellation/deletion fences, the indexed due query and
@@ -88,14 +88,42 @@ client denial of ticket reads/writes. A controlled image-write barrier also forc
 check and before the publication transaction: the old report is rejected, although an image callback already in
 flight can finish. Transaction fencing does not roll back external image writes.
 
-**Separate persistence limitation found:** the recorded fixture's nonempty `moments[].indicator` contains arrays
-of numeric arrays. Firestore rejects that report with INVALID_ARGUMENT (invalid nested entity). A characterization
-case retains the unmodified indicator payload and proves final-attempt reconciliation recovers from its publication
-failure without replacing the saved report. Successful-publication fence cases deliberately use empty indicators
-and no state-strip input, so they test only Firestore-compatible payloads; they do not validate production report
-serialization. `stateStrip` uses nested tuple arrays too when populated and needs the same serialization review.
-A reviewed storage representation/reader contract and populated-payload round-trip tests remain a production
-prerequisite. Update this characterization when that fix lands; do not treat rejection as the desired report UX.
+**Persistence limitation resolved locally (2026-11-24):** indicators and populated state strips are now encoded
+as named object rows at the Firestore boundary and decoded for app/server use. The previous rejection
+characterization has been replaced by exact populated-payload round-trip assertions. All takeover/stale-result
+cases now use populated indicators and state strips. The expanded 18-case emulator suite also exercises the real
+discovery writer's repeated merge and the identity-answer callable's reconstructed pixel point.
 
 These emulator tests supply local database integration evidence, not live Cloud Tasks/Scheduler delivery, process
 kill, resource-capacity or accuracy evidence. B-26 remains open and no production enablement is authorized.
+
+
+## Tracking tuple storage contract
+
+`tracking/current` and `tracking/discovery` writes carry the top-level marker
+`tupleEncoding: "pitchproof.tracking.tuples.v1"`. The validated worker report and all in-memory app/server types
+retain their tuple arrays; encoding changes only the Firestore representation:
+
+- `report.stateStrip`: `[start, end, state]` becomes `{start, end, state}` per array row.
+- `report.moments[].indicator` and discovery `moments[].indicator`: `[t, x, y, w, h]` becomes `{t, x, y, w, h}`.
+
+Rows retain order, numeric precision and every sample. Other report fields, identity states, image paths, report
+versions, feedback revisions, follow-ups and publication fences keep their existing semantics. The codec does not
+copy media, add identities, convert unrelated objects to JSON strings or change the worker/full-claims contract.
+
+The dependency-free `trackingStorage.ts` codec is mirrored in Functions and the app; a byte-equality test prevents
+drift. New writes encode only after worker validation. Server identity-answer reads, clip reasoning and discovery
+merges decode before using tuples. App report/discovery listeners decode before calling the tuple-based UI. Unknown
+encodings, malformed lengths, invalid states and nonfinite coordinates are rejected; app listeners clear the bad
+value and notify their existing error handler. Missing optional fields, empty rows and null reports remain valid.
+
+Readers accept legacy tuple rows without a marker, so no data rewrite is required. New-format readers must accompany
+any future writer rollout; old binaries that destructure stored rows directly cannot consume the new representation.
+The worker remains disabled by its existing approvals. Do not enable this write path for unsupported client versions.
+A rollback must retain compatible decoding while object-row documents exist; do not restore old direct-cast readers
+over newly encoded documents. No migration, client release, deployment or flag change was performed here.
+
+Local validation: 71 relevant unit tests plus the 18-case Firestore-emulator suite, app/test typechecks, Functions
+build and targeted lint. Real reports now successfully publish through the real parser/publication transaction with
+synthetic recorded payloads and exact server/app decode comparisons; the live Scheduler/Cloud Tasks, capacity,
+independent identity and approved rollout requirements remain outstanding. No footage inference or benchmark rerun.

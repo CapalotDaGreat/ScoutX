@@ -6,6 +6,7 @@ exports.processResolveTask = processResolveTask;
 exports.runResolveTaskAttempt = runResolveTaskAttempt;
 exports.processOcrFollowUpTask = processOcrFollowUpTask;
 exports.settleOrchestratedResolve = settleOrchestratedResolve;
+const trackingStorage_1 = require("./trackingStorage");
 const firestore_1 = require("firebase-admin/firestore");
 const functions_1 = require("firebase-admin/functions");
 const storage_1 = require("firebase-admin/storage");
@@ -56,7 +57,7 @@ async function mutateFeedback(uid, jobId, change) {
         const fbSnap = await tx.get(base.doc('feedback'));
         if (!curSnap.exists)
             throw new https_1.HttpsError('failed-precondition', 'No tracking report yet.');
-        const cur = curSnap.data();
+        const cur = (0, trackingStorage_1.decodeTrackingStorage)(curSnap.data());
         const fb = (fbSnap.exists ? fbSnap.data() : { ...(0, trackingV3_1.emptyFeedback)(), revision: 0 });
         const next = change(fb, cur, job);
         const revision = (fb.revision ?? 0) + 1;
@@ -279,8 +280,8 @@ async function processResolveTask(db, jobId, feedbackRevision, client, env = pro
             tx.set(quotaRef, { uid: job.playerId, action: trackingFollowUp_1.OCR_FOLLOW_UP_ACTION, window: 'day', bucket: at.slice(0, 10), count: used + 1,
                 updatedAt: at }, { merge: true });
         }
-        tx.set(base.doc('current'), { report, version: (curDoc?.version ?? 0) + 1, scope, parts: report.analysedRange.parts,
-            stale: false, pendingReason: null, feedbackRevision, updatedAt: at, followUp });
+        tx.set(base.doc('current'), (0, trackingStorage_1.encodeTrackingStorage)({ report, version: (curDoc?.version ?? 0) + 1, scope, parts: report.analysedRange.parts,
+            stale: false, pendingReason: null, feedbackRevision, updatedAt: at, followUp }));
         if (progress) {
             const published = { scope, parts: report.analysedRange.parts, analysedEndSec: report.analysedRange.endSec,
                 moments: report.moments.length, reviewQuestions: report.reviewQuestions.length, at };

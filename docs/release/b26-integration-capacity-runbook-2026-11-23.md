@@ -47,10 +47,11 @@ wait, HTTP 429/503 responses and retry exhaustion in this check.
    validation path must be independently authorized and isolated from production users before deployment.
 4. Final-attempt reconciliation is implemented locally (not deployed): an atomic server-only ticket accompanies
    the final resolve/OCR lease claim, and a bounded scheduled sweep settles abandoned state after expiry. See
-   [reconciliation contract](b26-final-attempt-reconciliation-2026-11-24.md). Unit tests and 16 local Firestore-emulator
+   [reconciliation contract](b26-final-attempt-reconciliation-2026-11-24.md). Unit tests and 18 local Firestore-emulator
    cases cover owner/lifecycle fencing and concurrent transactions. Live scheduler delivery, outage/backlog recovery
-   and killed-process behavior still need separately authorized validation. The emulator also exposed a nested-array
-   report-persistence limitation, documented in that contract; populated report serialization remains a prerequisite.
+   and killed-process behavior still need separately authorized validation. The nested-array report-persistence
+   blocker is fixed locally with populated indicator/state-strip round trips; compatible reader/writer rollout
+   remains required, as documented in that contract.
    Lease expiry alone does not run the sweep.
 
 ## 2. Evidence bundle and execution order

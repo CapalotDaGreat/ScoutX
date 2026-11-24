@@ -1,3 +1,4 @@
+import { encodeTrackingStorage, decodeTrackingStorage } from './trackingStorage';
 import { getFirestore, type Firestore, type Transaction } from 'firebase-admin/firestore';
 import { getFunctions } from 'firebase-admin/functions';
 import { getStorage } from 'firebase-admin/storage';
@@ -64,7 +65,7 @@ async function mutateFeedback(uid: string, jobId: string,
     const curSnap = await tx.get(base.doc('current'));
     const fbSnap = await tx.get(base.doc('feedback'));
     if (!curSnap.exists) throw new HttpsError('failed-precondition', 'No tracking report yet.');
-    const cur = curSnap.data() as CurrentDoc;
+    const cur = decodeTrackingStorage(curSnap.data()) as unknown as CurrentDoc;
     const fb = (fbSnap.exists ? fbSnap.data() : { ...emptyFeedback(), revision: 0 }) as FeedbackDoc;
     const next = change(fb, cur, job);
     const revision = (fb.revision ?? 0) + 1;
@@ -298,8 +299,8 @@ export async function processResolveTask(db: Firestore, jobId: string, feedbackR
       tx.set(quotaRef, { uid: job.playerId, action: OCR_FOLLOW_UP_ACTION, window: 'day', bucket: at.slice(0, 10), count: used + 1,
         updatedAt: at }, { merge: true });
     }
-    tx.set(base.doc('current'), { report, version: (curDoc?.version ?? 0) + 1, scope, parts: report.analysedRange.parts,
-      stale: false, pendingReason: null, feedbackRevision, updatedAt: at, followUp });
+    tx.set(base.doc('current'), encodeTrackingStorage({ report, version: (curDoc?.version ?? 0) + 1, scope, parts: report.analysedRange.parts,
+      stale: false, pendingReason: null, feedbackRevision, updatedAt: at, followUp }));
     if (progress) {
       const published: PublishedReport = { scope, parts: report.analysedRange.parts, analysedEndSec: report.analysedRange.endSec,
         moments: report.moments.length, reviewQuestions: report.reviewQuestions.length, at };

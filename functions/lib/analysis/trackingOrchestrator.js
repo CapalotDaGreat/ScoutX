@@ -4,6 +4,7 @@ exports.extractTrackingSegmentTask = exports.startPlayerAnalysis = exports.disco
 exports.startAnalysis = startAnalysis;
 exports.processExtractTask = processExtractTask;
 exports.processDiscoverTask = processDiscoverTask;
+const trackingStorage_1 = require("./trackingStorage");
 /**
  * Video Intelligence 4.0 - progressive, resumable player analysis.
  *
@@ -257,7 +258,7 @@ async function finishDiscovery(db, jobId, generation, index, status, moments, at
     const docRef = db.collection(frameAnalysis_1.MATCH_COLLECTION).doc(jobId).collection(trackingV3_1.TRACKING_COLLECTION).doc(exports.DISCOVERY_COLLECTION_DOC);
     const next = await db.runTransaction(async (tx) => {
         const prog = (await tx.get(ref)).data();
-        const cur = (await tx.get(docRef)).data();
+        const cur = (0, trackingStorage_1.decodeTrackingStorage)((await tx.get(docRef)).data() ?? {});
         if (!prog?.discovery || prog.generation !== generation)
             return null;
         const d = { ...prog.discovery, state: { ...prog.discovery.state,
@@ -273,7 +274,7 @@ async function finishDiscovery(db, jobId, generation, index, status, moments, at
         const queueExtraction = finished && !d.extractionQueued;
         if (queueExtraction)
             d.extractionQueued = true;
-        tx.set(docRef, { moments: merged, generation, updatedAt: at });
+        tx.set(docRef, (0, trackingStorage_1.encodeTrackingStorage)({ moments: merged, generation, updatedAt: at }));
         tx.set(ref, { discovery: d, updatedAt: at }, { merge: true });
         const pending = prog.plan.map((s) => s.index).filter((i) => prog.segments[String(i)]?.status !== 'done');
         return { first, queueExtraction, order: (0, trackingProgress_1.prioritisedSegments)(prog.plan, d.sightingTimes).filter((i) => pending.includes(i)) };
