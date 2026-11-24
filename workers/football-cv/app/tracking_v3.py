@@ -282,6 +282,14 @@ def resolve(request: ResolveRequest) -> dict:
     runs = sorted(str(p) for p in job_dir.glob("c_*") if (p / "detections.npz").exists())
     if not runs:
         raise HTTPException(status_code=409, detail="no_artifacts")
+    # Server-only evaluation seam: no request parameter can enable export or select its destination.
+    from scoutx_tracker.b26_export import configured_context, export_resolve, verify_pre_resolve
+    try:
+        evaluation = configured_context(request.jobId, request.target.model_dump(), request.feedback.model_dump())
+        if evaluation is not None:
+            verify_pre_resolve(evaluation[1], job_dir, _job_sightings(request.jobId))
+    except (ValueError, KeyError, TypeError, OSError):
+        raise HTTPException(status_code=503, detail="evaluation_export_not_configured") from None
     fn = _analyze
     if fn is None:
         from scoutx_tracker.analyze import analyze as fn  # noqa: PLC0415
@@ -300,14 +308,22 @@ def resolve(request: ResolveRequest) -> dict:
                     rejects=_points(fb.no),
                     feedback={"periods": fb.periods, "offPitch": fb.offPitch, "asked": _points(fb.asked)},
                     position=request.target.position, **extra)
+        if not report.get("invariants", {}).get("ok", False):
+            raise HTTPException(status_code=500, detail="inconsistent_report")
+        if evaluation is not None:
+            output, context = evaluation
+            try:
+                export_resolve(Path(tmp) / "timeline.npz", report, runs, output, context)
+            except (ValueError, KeyError, TypeError, OSError):
+                raise HTTPException(status_code=500, detail="evaluation_export_failed") from None
         timeline = {}
         tl_path = Path(tmp) / "timeline.npz"
         if tl_path.exists():
-            z = np.load(tl_path, allow_pickle=False)
-            # Down-sample to 2 per second: enough for the app's state strip.
-            step = max(1, int(round(len(z["times"]) / max(1.0, float(z["times"][-1] - z["times"][0])) / 2)))
-            timeline = {"times": [round(float(t), 2) for t in z["times"][::step]],
-                        "states": [str(s) for s in z["states"][::step]]}
+            with np.load(tl_path, allow_pickle=False) as z:
+                # Down-sample to 2 per second: enough for the app's state strip.
+                step = max(1, int(round(len(z["times"]) / max(1.0, float(z["times"][-1] - z["times"][0])) / 2)))
+                timeline = {"times": [round(float(t), 2) for t in z["times"][::step]],
+                            "states": [str(s) for s in z["states"][::step]]}
     if not report.get("invariants", {}).get("ok", False):
         raise HTTPException(status_code=500, detail="inconsistent_report")
     from .backends import model_versions  # noqa: PLC0415

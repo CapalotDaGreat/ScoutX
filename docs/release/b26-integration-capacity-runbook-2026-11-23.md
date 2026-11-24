@@ -33,15 +33,15 @@ wait, HTTP 429/503 responses and retry exhaustion in this check.
 
 **Tooling/gating prerequisites still open:**
 
-1. A reviewed collector/exporter must preserve full-resolution claim timestamps, states and boxes before the
-   worker's temporary analysis output is removed. `/v3/tracking:resolve` currently returns a roughly 2 Hz state
-   strip, not the full claims sidecar. That strip and report thumbnails cannot satisfy the frame-agreement gate.
-   If collection changes the worker image or execution code, record it as a new configuration and establish
-   instrumentation parity; sharing the original base image is not proof of unchanged behavior.
-2. A plan-aware parity adapter is needed. `full_match_benchmark.py --chunk-sec=120` means uniform 120 s chunks;
-   it does not reproduce the production plan. `compare_runs.py` requires matching `configuration.chunkSec` and
-   does not understand an explicit mixed plan. Do not edit metadata to make unlike layouts appear comparable.
-   Review/test the adapter before real-data execution; this runbook does not add or claim that tooling exists.
+1. The opt-in full-claims exporter is implemented with synthetic regression tests; see the
+   [tooling contract](../../workers/football-cv/bench/B26.md). It preserves every sampled timestamp/state/box,
+   validates hashed checkpoints and frozen sampling, and writes private attempts before temporary output cleanup.
+   The API still returns only its roughly 2 Hz strip. No real export or instrumentation parity is established.
+   The changed execution code is a new configuration requiring review and parity against the historical anchor.
+2. `bench/compare_b26.py` implements explicit mixed-plan A-to-B, schedule-only B-to-C and direct A-to-C comparisons,
+   recomputing accuracy and agreement with unchanged `balanced_5.2` thresholds. It validates frozen metadata,
+   sidecars, plans and sampling rather than editing unlike layouts to appear equivalent. Synthetic tests are not
+   real-data evidence. `compare_runs.py` remains unchanged and still requires matching `configuration.chunkSec`.
 3. Production `APPROVED_CV_WORKER` is null. Emulator approval seams are for local tests only. Do not set emulator
    environment variables on a cloud service or fabricate a production approval to get through the gate. A live
    validation path must be independently authorized and isolated from production users before deployment.

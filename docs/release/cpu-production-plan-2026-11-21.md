@@ -52,7 +52,9 @@ These are source changes, not evidence of deployed behavior. The worker service 
 ## 3. Remaining operational prerequisites (B-26)
 
 The [B-26 integration/capacity runbook](b26-integration-capacity-runbook-2026-11-23.md) is prepared, not executed.
-It records the missing full-claims collector and mixed-plan comparator as prerequisites; no live validation is authorized.
+The full-claims collector and mixed-plan comparator now have synthetic regression coverage; see the
+[tooling contract](../../workers/football-cv/bench/B26.md). Instrumentation parity and actual workflow/capacity
+validation remain prerequisites; no live validation is authorized.
 
 1. Prepare an explicitly approved, private CPU service rollout using the pinned digest and recorded CPU settings.
    Verify authentication, owner-scoped storage, consent/kill-switch behavior, concurrency/resource limits, rollback
