@@ -254,12 +254,9 @@ def run_ocr(crops_by_tid: dict[int, list[str]], cache_path: Path, number_len: in
     return cache
 
 
-# 5.3 CANDIDATE C (ON by default; SCOUTX_OCR_CONSULTED_ONLY=0 restores the old behaviour): cache equivalence. run_ocr returns the WHOLE cache
-# file; the first pass used every entry as evidence - including reads that a previous run's refinement passes (or other
-# runs) left in the cache - for number-conflict splits and identity. Verified on IMG_4809 (full match): a warm cache
-# alone changed 36 claim frames (8 confirmed-correct #20 frames weakened). With this flag the first pass uses only the
-# crops it selected and consulted itself; refinement passes already use only their own crops. A cache then only saves
-# OCR time and never adds evidence (a budgeted/deferred run can still read more crops when warm, by design).
+# Unconsulted OCR-cache entries are never identity evidence. SCOUTX_OCR_CONSULTED_ONLY=0 used to
+# restore that leak (a warm cache changed 36 claim frames on IMG_4809, including 8 confirmed #20
+# frames). The opt-out is ignored: a cache only saves OCR time on crops this pass selected.
 OCR_CONSULTED_ONLY = os.environ.get("SCOUTX_OCR_CONSULTED_ONLY", "1") != "0"
 
 SCHEMA = "pitchproof.tracking.v3"
@@ -401,9 +398,12 @@ def analyze(run_dirs: list[str], out_dir: str, number: str | None, kit: str, kit
         cache = run_ocr(crops, Path(run_dirs[0]).parent / "ocr_cache.json", len(number), log, early_stop=not ocr_dense,
                         budget_sec=ocr_budget_sec, skipped=ocr_skipped, max_new=ocr_max_new, read_new=ocr_new,
                         consulted=consulted)
-        if OCR_CONSULTED_ONLY:
-            # 5.3 candidate C: evidence = the crops THIS pass selected and consulted, never other cache entries.
-            cache = {k: v for k, v in cache.items() if k in consulted}
+        # Evidence is only the crops this pass selected. A warm cache may answer those crops, but a
+        # read left by an earlier run is not identity evidence. SCOUTX_OCR_CONSULTED_ONLY no longer
+        # reopens that path: identical selected crops resolve the same way cold or warm.
+        cache = {k: v for k, v in cache.items() if k in consulted}
+        if not OCR_CONSULTED_ONLY:
+            log("SCOUTX_OCR_CONSULTED_ONLY=0 is ignored: unconsulted cache entries are not identity evidence")
         det_of = det_of_crop(D)
         det_reads = {det_of[c]: v[0] for c, v in cache.items() if v[0] and c in det_of}
         # Same-team identity swaps are invisible to colour: split where shirt numbers conflict.

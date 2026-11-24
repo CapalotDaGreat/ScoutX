@@ -1,0 +1,156 @@
+{
+  "schema": "pitchproof.full-match-replay-recovery.v1",
+  "status": "unavailable",
+  "checkedAt": "2026-11-24",
+  "expected": {
+    "schema": "pitchproof.full-match-replay.v1",
+    "provenance": "workers/football-cv/bench/results/5.3/full-match-identity-20261103/full_match_replay_provenance.json",
+    "sourceWork": "/home/claude/work/fm/work_x0",
+    "extraReads": ["/home/claude/work/fm/work_x1/stage1/ocr_cache.json"],
+    "builtReplay": "/home/claude/work/fmr/replay",
+    "discoveryFingerprint": "c84c3e2f5a9594a8c54ae326ef669ca0a0a58dceb15adb0f286152db270ec4df",
+    "fileCount": 19
+  },
+  "searched": [
+    "C:\\ZLI\\M335\\ScoutX",
+    "C:\\ZLI\\M335\\ScoutX\\.local",
+    "C:\\ZLI\\M335\\ScoutX-gpu-benchmark",
+    "C:\\ZLI\\M335\\ScoutX-resolve-timeout",
+    "Ubuntu WSL /home/claude and /root/work",
+    "git tracked bench inputs"
+  ],
+  "build": "not run; work_x0 is absent, and a different stage-1 work would fail the committed hash contract",
+  "files": [
+    {
+      "name": "chunks/c_00000/detections.npz",
+      "expectedSha256": "4b9914adf42ad21d0b8e0ddd0f214b84e55c971297d115ba3f84661c2e4f322d",
+      "sizeBytes": null,
+      "found": false
+    },
+    {
+      "name": "chunks/c_00000/meta.json",
+      "expectedSha256": "f77f035aaa05ed417357f4379a1e2318be85d49f96b264901fb2c4e27c0540e0",
+      "sizeBytes": null,
+      "found": false
+    },
+    {
+      "name": "chunks/c_00001/detections.npz",
+      "expectedSha256": "9dc106579b28aea3cd248752cb2d62cd8b4c104c8963bdcce2bd75579866367a",
+      "sizeBytes": null,
+      "found": false
+    },
+    {
+      "name": "chunks/c_00001/meta.json",
+      "expectedSha256": "dca43e6a9e0e2fcf05419a8a47bf740da616ae72d1e40329d8c43cb66b1d066d",
+      "sizeBytes": null,
+      "found": false
+    },
+    {
+      "name": "chunks/c_00002/detections.npz",
+      "expectedSha256": "6c295aac5578d1471d8e08cff6bcd443f33b19391ffb4c01ed82bde32ae445e3",
+      "sizeBytes": null,
+      "found": false
+    },
+    {
+      "name": "chunks/c_00002/meta.json",
+      "expectedSha256": "0bea87b239dfce965c5e1a37b5cfc6dfdcbda98d86c9da1a6a1ec39d2a0708a6",
+      "sizeBytes": null,
+      "found": false
+    },
+    {
+      "name": "chunks/c_00003/detections.npz",
+      "expectedSha256": "e57479fefe3dd664488c68fe6d8241fad33efc691d61ffa167ba21eb848420a8",
+      "sizeBytes": null,
+      "found": false
+    },
+    {
+      "name": "chunks/c_00003/meta.json",
+      "expectedSha256": "dd048f04a9e878de30d774061a946069afb7ab5a5a5adacf629361a7cfb0fa52",
+      "sizeBytes": null,
+      "found": false
+    },
+    {
+      "name": "chunks/c_00004/detections.npz",
+      "expectedSha256": "59045ec04c8d5c1001268f2c623cbca6e90c0bab9a3de5807241ed7a916eaa4d",
+      "sizeBytes": null,
+      "found": false
+    },
+    {
+      "name": "chunks/c_00004/meta.json",
+      "expectedSha256": "f7f25786298c8a4f3386781f89e867af7791fb500ef335b0a266c3d9ea412923",
+      "sizeBytes": null,
+      "found": false
+    },
+    {
+      "name": "chunks/c_00005/detections.npz",
+      "expectedSha256": "2b6208605926354e976c7c410400dd80671ea1ec90cf433e814f933a24288109",
+      "sizeBytes": null,
+      "found": false
+    },
+    {
+      "name": "chunks/c_00005/meta.json",
+      "expectedSha256": "d3ba9239453bfd65c7ade3fc098804977e7b19a0687d445f5cca68a866522446",
+      "sizeBytes": null,
+      "found": false
+    },
+    {
+      "name": "chunks/c_00006/detections.npz",
+      "expectedSha256": "e03c95fa8438a7e8d7faac40e709fc20ec730c5c350ae38ff05c7d6fef725d0a",
+      "sizeBytes": null,
+      "found": false
+    },
+    {
+      "name": "chunks/c_00006/meta.json",
+      "expectedSha256": "95f279b68e7f2f05c11c3451535bfd7147e32c741defd1451520b20408bf50f2",
+      "sizeBytes": null,
+      "found": false
+    },
+    {
+      "name": "crops.json",
+      "expectedSha256": "75b266546c9f100789b5c86fa0bed024e179898812d7b567017f71878a0682c0",
+      "sizeBytes": null,
+      "found": false
+    },
+    {
+      "name": "ocr_reads.json",
+      "expectedSha256": "781b40b18874c6faf31259cab7f677ab0e0d934374870d25b7531c4b02c49ec5",
+      "sizeBytes": null,
+      "found": false
+    },
+    {
+      "name": "original_result.json",
+      "expectedSha256": "1276bf38d3e9b748d6a8fbd326494edba9014422ba3c467d2b0a1517b658006f",
+      "sizeBytes": null,
+      "found": false
+    },
+    {
+      "name": "original_timeline.npz",
+      "expectedSha256": "fad444c127030a41c9e07e1b7bb0fbc25f668a6f6860f65c605c96e8e0277d7c",
+      "sizeBytes": 262330,
+      "found": true,
+      "location": "workers/football-cv/bench/results/5.3/full-match-exchange-audit-20261103/baseline/timeline.npz",
+      "compatible": "byte-identical to the required original timeline; not a replay bundle"
+    },
+    {
+      "name": "sightings.json",
+      "expectedSha256": "0b77a1719a9eae97f0c92ffed9ca0ca2757c8a968814c05a11163df297a98dd9",
+      "sizeBytes": null,
+      "found": false
+    }
+  ],
+  "rejected": [
+    {
+      "location": ".local/fm-linux-cold-20261106/work",
+      "c00000DetectionsSha256": "a060fb737daba69c2a128b3fb6c8b43a3e25a39f6e074b8343696ab56cd44f7a",
+      "discoveryFingerprint": "81451a61abf9aa0fdfc11c3d92f919c77d675f04a858029c856b4959eead2c79",
+      "reason": "different extraction"
+    },
+    {
+      "location": ".local/fm-detour-cpu-20261106-resolve/baseline/work",
+      "c00000DetectionsSha256": "0e9054b37e3ae44b41561709b1271b9face434c973c0662a2de96903aac0e63c",
+      "discoveryFingerprint": "81451a61abf9aa0fdfc11c3d92f919c77d675f04a858029c856b4959eead2c79",
+      "reason": "different extraction"
+    }
+  ],
+  "transfer": "Copy /home/claude/work/fmr/replay, or work_x0 plus work_x1/stage1/ocr_cache.json, from the original Linux host onto this machine by a private local channel. Verify every file hash before running bench/full_match_replay.py. No object-store path for this bundle is recorded."
+}

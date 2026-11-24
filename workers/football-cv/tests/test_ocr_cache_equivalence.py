@@ -82,10 +82,12 @@ def test_with_flag_a_polluted_warm_cache_resolves_exactly_like_a_cold_run(tmp_pa
 
 
 @pytest.mark.skipif(not REPLAY.exists(), reason="regression replay artifacts not present")
-def test_characterisation_without_flag_foreign_cache_entries_become_evidence(tmp_path):
+def test_polluted_warm_cache_matches_cold_even_when_the_old_opt_out_is_set(tmp_path):
+    """Foreign cache entries used to become evidence when SCOUTX_OCR_CONSULTED_ONLY=0.
+    They no longer do: the warm polluted cache resolves like a cold run."""
     cold = _replay(tmp_path, "cold0", "0")
     warm = _replay(tmp_path, "warm0", "0", _polluted(tmp_path))
-    assert not _same(cold, warm)
+    assert _same(cold, warm)
 
 
 def test_default_is_consulted_only(monkeypatch):

@@ -1,0 +1,10 @@
+{
+  "name": "coverage-floor-aspirational",
+  "note": "Separate from balanced_5.2, which is unchanged. These floors stop an abstaining or low-coverage run from being described as production-ready. They are research objectives, not a regression gate and not a claim that any recorded run meets them. The IMG_4809 CPU reference (claimedRecall 0.621, IDF1 0.766) does not.",
+  "absolute": {
+    "claimedRecall": {"min": 0.90},
+    "IDF1": {"min": 0.95},
+    "wrongIdentitySec": {"max": 0.0},
+    "confirmedWrongIdentitySec": {"max": 0.0}
+  }
+}

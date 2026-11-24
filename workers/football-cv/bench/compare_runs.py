@@ -7,6 +7,10 @@ to the reference, per-frame agreement, speed-up and per-chunk stage-1 speed. Use
 
 Exit codes: 0 gate passed, 3 gate failed, 5 not comparable, 7 reference incomplete (only partial
 per-chunk speed comparison possible - never presented as a full comparison).
+
+`coverageFloor` is reported beside the regression gate and does not change the exit code.
+It is the aspirational absolute bar in gates/coverage_floor.json. A regression pass with
+`coverageFloor.passed` false is not a production-ready accuracy result.
 """
 from __future__ import annotations
 
@@ -33,6 +37,14 @@ def chunk_speed(ref: dict, cand: dict) -> list[dict]:
     return out
 
 
+def coverage_floor(acc: dict | None) -> dict | None:
+    """Aspirational absolute bar. Missing file or accuracy leaves the regression result unchanged."""
+    path = HERE / "gates" / "coverage_floor.json"
+    if not path.is_file() or not isinstance(acc, dict) or not acc:
+        return None
+    return pp_bench.evaluate_gate(acc, json.loads(path.read_text()))
+
+
 def compare(ref: dict, cand: dict, ref_claims: list | None, cand_claims: list | None, gate: dict | None) -> tuple[dict, int]:
     why = pp_bench.comparable(cand, ref)
     out: dict = {"reference": {"status": ref.get("status"), "device": (ref.get("configuration") or {}).get("stage1Settings", {}).get("device")},
@@ -53,6 +65,9 @@ def compare(ref: dict, cand: dict, ref_claims: list | None, cand_claims: list | 
         return out, 7
     if ref_claims is not None and cand_claims is not None:
         out["agreement"] = pp_bench.claims_agreement(ref_claims, cand_claims)
+    floor = coverage_floor(cand.get("accuracy"))
+    if floor is not None:
+        out["coverageFloor"] = floor
     if gate:
         g = pp_bench.evaluate_gate(cand.get("accuracy") or {}, gate, ref.get("accuracy"))
         g["failures"].extend(pp_bench.agreement_failures(out.get("agreement"), gate))

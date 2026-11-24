@@ -11,7 +11,9 @@ States (exactly one per analysed frame, highest priority first):
                        uncalibrated identity score is >= LIKELY and no competing candidate of
                        similar score is in view at the same moment; or (5.1, "anchored") the
                        followed person is joined to hard evidence by clean tracker hand-offs or
-                       clear team-mate-contact links within 30 s of it.
+                       clear team-mate-contact links within 30 s of it. "reacquired" is the same
+                       likely state for rows taken from another track after a refused tail; it is
+                       not a number read and it is not confirmed.
   AMBIGUOUS            Either the chosen candidate scores below LIKELY, another plausible
                        candidate (score >= COMPETITOR) is in view at the same time, the
                        followed box carries a nearby read that cannot be the target number, or
@@ -77,7 +79,9 @@ def frame_states(T, res, tl, period_kind: np.ndarray, camera: np.ndarray | None 
     unclear = soft & (ev == "contact_unclear")
     # 5.1 anchored continuity: joined to hard evidence by clean hand-offs / clear contact links
     # within ANCHOR_SEC -> LIKELY whatever look-alikes are in view (never confirmed)
-    anchored = soft & (ev == "anchored")
+    # "reacquired" is a continuation of another track after a refused tail. It is likely,
+    # never confirmed, and it is not the contaminated track's own evidence.
+    anchored = soft & np.isin(ev, ("anchored", "reacquired"))
     rest = soft & ~unclear & ~anchored
     states[rest & (conf >= likely) & (comp < competitor)] = LIKELY_VISIBLE
     states[rest & ((conf < likely) | (comp >= competitor))] = AMBIGUOUS

@@ -85,22 +85,13 @@ def test_F17_desired_no_claim_on_player_17(tmp_path_factory):
     assert not any(str(tl["states"][i]) in CLAIM for i in _span(tl, 1301.5, 1305.8))
 
 
-def test_cache_state_characterisation_warm_ocr_cache_changes_identity(tmp_path_factory):
-    """Known sensitivity: number-conflict splits use the reads present when tracklets are built; a populated cache
-    adds refinement-pass reads, so the same inputs resolve differently (here: the 8 confirmed frames at 1161-1163 s
-    weaken and the F6 claims disappear)."""
-    tl, _ = _run("base", tmp_path_factory)
-    tw, _ = _run("warm", tmp_path_factory, warm=True)
-    cold = sum(str(tl["states"][i]) == "CONFIRMED_VISIBLE" for i in _span(tl, 1161.1, 1162.8))
-    warm = sum(str(tw["states"][i]) == "CONFIRMED_VISIBLE" for i in _span(tw, 1161.1, 1162.8))
-    assert warm < cold
-
-
-@pytest.mark.xfail(strict=True, reason="unrepaired: identity depends on the OCR cache state (warm vs cold)")
-def test_cache_state_desired_same_identity_warm_or_cold(tmp_path_factory):
+def test_cache_state_warm_matches_cold_identity(tmp_path_factory):
+    """A warm OCR cache answers crops this pass selects. It must not change identity.
+    Previously a populated cache weakened the 8 confirmed frames at 1161-1163 s."""
     tl, _ = _run("base", tmp_path_factory)
     tw, _ = _run("warm", tmp_path_factory, warm=True)
     assert np.array_equal(tl["states"], tw["states"])
+    assert np.array_equal(tl["evidence"], tw["evidence"])
 
 
 def test_candidate_C_warm_cache_resolves_exactly_like_the_cold_baseline(tmp_path_factory):

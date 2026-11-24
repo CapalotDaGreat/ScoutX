@@ -86,6 +86,10 @@ def test_invariants_detect_inconsistent_peaks_and_unverified_passes():
     assert any("peak" in x for x in v)
     assert any("completed outcome" in x for x in v)
     assert any("rejected" in x for x in v)
+    overlap = invariants.check({"tracklets": [{"tid": 1, "t0": 0.0, "t1": 5.0}, {"tid": 2, "t0": 4.0, "t1": 8.0}]})
+    assert any("overlap" in x for x in overlap)
+    touching = invariants.check({"tracklets": [{"tid": 1, "t0": 0.0, "t1": 5.0}, {"tid": 2, "t0": 4.7, "t1": 8.0}]})
+    assert not any("overlap" in x for x in touching)
 
 
 # --------------------------------------------------------------------------- periods

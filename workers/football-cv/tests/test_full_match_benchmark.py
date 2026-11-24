@@ -361,6 +361,7 @@ def test_compare_runs_gate_speedup_and_incomplete_reference():
     claims = [[0.0, "LIKELY_VISIBLE", [0, 0, 10, 10]]]
     res, rc = compare_runs.compare(cpu, gpu, claims, claims, gate)
     assert rc == 0 and res["result"] == "PASSED" and res["speedup"] == 10.0 and res["chunkSpeed"][0]["speedup"] == 10.0
+    assert res["coverageFloor"]["passed"] is False
     worse = _run_rec("cuda", acc={**acc, "IDF1": 0.85}, wall=400.0)
     res, rc = compare_runs.compare(cpu, worse, claims, claims, gate)
     assert rc == 3 and res["result"] == "FAILED"
@@ -374,6 +375,41 @@ def test_compare_runs_gate_speedup_and_incomplete_reference():
     result, code = compare_runs.compare(cpu, failed_candidate, claims, claims, gate)
     assert code == 7 and result['result'].startswith('INCOMPLETE')
     assert 'speedup' not in result
+
+
+def test_coverage_floor_rejects_abstention_and_the_recorded_cpu_reference():
+    """balanced_5.2 stays the regression gate. The separate floor is an absolute bar the recorded
+    IMG_4809 CPU run does not clear, so a low-coverage or all-abstaining engine cannot pass it."""
+    floor = json.loads((BENCH / "gates" / "coverage_floor.json").read_text())
+    balanced = json.loads((BENCH / "gates" / "balanced_5.2.json").read_text())
+    assert "min" not in json.dumps(balanced["absolute"])
+    abstain = {"claimedRecall": 0.0, "IDF1": 0.0, "wrongIdentitySec": 0.0, "confirmedWrongIdentitySec": 0.0}
+    failed = pp_bench.evaluate_gate(abstain, floor)
+    assert failed["passed"] is False
+    assert any("claimedRecall" in f for f in failed["failures"])
+    recorded = json.loads((BENCH / "results" / "5.3" / "l4-20261029-netherlands" / "cpu" / "full_match.json").read_text())
+    recorded_gate = pp_bench.evaluate_gate(recorded["accuracy"], floor)
+    assert recorded_gate["passed"] is False
+    assert any("claimedRecall" in f and "0.621" in f for f in recorded_gate["failures"])
+    assert any("IDF1" in f for f in recorded_gate["failures"])
+    ready = {"claimedRecall": 0.96, "IDF1": 0.97, "wrongIdentitySec": 0.0, "confirmedWrongIdentitySec": 0.0}
+    assert pp_bench.evaluate_gate(ready, floor)["passed"] is True
+    # The regression gate still accepts the recorded run against itself. The floor does not replace it.
+    same = pp_bench.evaluate_gate(recorded["accuracy"], balanced, recorded["accuracy"])
+    assert same["passed"] is True
+
+
+def test_chosen_tracklets_may_not_occupy_two_places():
+    from scoutx_tracker import invariants
+    overlap = invariants.check({"tracklets": [{"tid": 1, "t0": 0.0, "t1": 5.0}, {"tid": 2, "t0": 4.0, "t1": 8.0}]})
+    assert any("overlap" in x for x in overlap)
+    touching = invariants.check({"tracklets": [{"tid": 1, "t0": 0.0, "t1": 5.0}, {"tid": 2, "t0": 4.7, "t1": 8.0}]})
+    assert not any("overlap" in x for x in touching)
+    # 1.5 frames at 5 fps is 0.30 s and stays inside the allowance. Half a second does not, at any of 5/10/25/30 fps.
+    one_and_a_half_at_5fps = invariants.check({"tracklets": [{"tid": 1, "t0": 0.0, "t1": 1.0}, {"tid": 2, "t0": 0.70, "t1": 2.0}]})
+    assert not any("overlap" in x for x in one_and_a_half_at_5fps)
+    half_second = invariants.check({"tracklets": [{"tid": 1, "t0": 0.0, "t1": 1.0}, {"tid": 2, "t0": 0.49, "t1": 2.0}]})
+    assert any("overlap" in x for x in half_second)
 
 
 def test_box_agreement_is_not_applicable_only_when_both_runs_abstain_everywhere():

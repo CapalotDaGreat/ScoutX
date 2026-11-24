@@ -50,6 +50,18 @@ def check(report: dict) -> list[str]:
     chosen = {t["tid"] for t in report.get("tracklets", [])}
     if rejected & chosen:
         v.append("identity: a rejected/excluded tracklet is attributed to the target")
+    # `_best_chain` allows about 1.5 frames of overlap. 0.35 s covers that down to 5 fps.
+    # A longer overlap means the published target is in two places at once.
+    spans = sorted(
+        (float(t["t0"]), float(t["t1"]))
+        for t in report.get("tracklets", [])
+        if isinstance(t.get("t0"), (int, float)) and isinstance(t.get("t1"), (int, float))
+        and not isinstance(t.get("t0"), bool) and not isinstance(t.get("t1"), bool)
+    )
+    for i in range(1, len(spans)):
+        if spans[i][0] < spans[i - 1][1] - 0.35:
+            v.append("identity: chosen tracklets overlap in time")
+            break
 
     for e in report.get("events", []):
         if not (0 <= e["start"] <= e["end"] <= rec + EPS):

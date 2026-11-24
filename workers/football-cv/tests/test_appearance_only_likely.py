@@ -46,14 +46,15 @@ def test_frame_states_unit(monkeypatch):
 
 
 @pytest.mark.skipif(not REP.exists(), reason="regression replay artifacts not present")
-def test_E3_appearance_claims_become_ambiguous_and_nothing_else_changes(tmp_path):
+def test_E3_is_anchored_so_D_does_not_reclassify_it(tmp_path):
+    """E3 is a hand-off into a number read, so its evidence is anchored. Candidate D only relabels
+    frames whose evidence is appearance."""
     base, cand = _replay(tmp_path, "reference_i0225", False), _replay(tmp_path, "reference_i0225", True)
-    assert all(str(base["states"][w]) == "LIKELY_VISIBLE" for w in E3)
-    assert all(str(cand["states"][w]) == "AMBIGUOUS" for w in E3)
+    assert all(str(base["states"][w]) == "LIKELY_VISIBLE" and str(base["evidence"][w]) == "anchored" for w in E3)
+    assert all(str(cand["states"][w]) == "LIKELY_VISIBLE" and str(cand["evidence"][w]) == "anchored" for w in E3)
     changed = np.flatnonzero(base["states"] != cand["states"])
-    assert all(str(base["evidence"][i]) == "appearance" for i in changed)
+    assert len(changed) and all(str(base["evidence"][i]) == "appearance" for i in changed)
     assert np.array_equal(base["present"], cand["present"]) and np.array_equal(base["evidence"], cand["evidence"])
-    # number-confirmed acquisition (the single correct '20' read at w194, and frames before E1) is untouched
     assert str(cand["states"][194]) == "CONFIRMED_VISIBLE"
 
 

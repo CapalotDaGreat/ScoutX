@@ -1,11 +1,8 @@
-"""Known, UNREPAIRED identity failures at IMG_4809 225-255 s, as numeric regression replays (5.3).
+"""Known identity failures at IMG_4809 225-255 s, as numeric regression replays (5.3).
 
-Each failure has two tests:
-
-* a characterisation test, which PASSES while the faulty behaviour still reproduces. It proves that the replay
-  runs the failing runtime logic, so the xfail below fails for the right reason;
-* a strict xfail stating the desired behaviour. When a repair makes it pass, pytest reports XPASS as a failure,
-  which forces that repair to update this file deliberately.
+P and E4 are repaired at publication. E3 is repaired at selection: the piece that hands off into
+the verified number read is kept, and the distant look-alike is not. SCOUTX_RESUME_SPLIT and
+SCOUTX_DETOUR_SPLIT stay off.
 
 Both run with SCOUTX_EXCHANGE_SPLIT off and on: the exchange-split candidate (93258f7) does not touch these
 mechanisms.
@@ -14,28 +11,27 @@ Replays are bench/results/5.3/wrong-player-20261102/replays/{default,reference}_
 stage-1 detections, OCR crop names and the reads the original run obtained, and discovery sightings. The real
 stage 2 runs from an empty cache. Window frame w = source frame - 2250.
 
-P - pause-and-resume transfer (DEFAULT decoder, w194-197):
-  #20's tracklet 201 has no rows at w192-193 while #20 crosses player A.
-  - At w193 A's raw track takes #20's box. The steal rule cuts it there, with an UNCLEAR link.
-  - At w194 #20's track resumes on player A's box and stays with A to w197.
-  - This is not a mutual exchange, because the two jumps happen on different frames.
-  - The identity of 201 ("anchored": joined by clean hand-offs to the tracklet read "20") passes to A: LIKELY
-    claims on A at w194-197.
-  - Under the original labels these frames count as correct, because the piece-based labels make the same swap
-    (label_corrections_i0225.json C1-C6, proposed).
+P - pause-and-resume transfer (DEFAULT decoder), recovered and then followed:
+  #20's rows from w194 sit on player A, so they are not published. Another track keeps
+  #20's body size on those frames and is published there. The same track is followed
+  while each step still continues the previous box, and the walk stops before the step
+  that jumps away. w193 stays unclaimed. w185-191 stay on #20.
+  SCOUTX_RESUME_SPLIT remains off.
 
-E3 - appearance-only choice of a distant player (REFERENCE rendering, w133-153):
-  The classifier ranked tracklet 78 (distant N) above #20's tracklet 188, so LIKELY / appearance
-  claims landed on N at w136-139 and w145-149. The characterisation below asserts that unrepaired state.
-  SCOUTX_DETOUR_SPLIT=1 changes it; that opt-in is a separate test and is not the release default.
+E4 - one-frame confirmed jump (REFERENCE rendering, w211), repaired at publication:
+  The number tracklet's row at w211 continues neither neighbour (IoU 0.37 then 0.00), so that
+  row is not published and cannot inherit CONFIRMED. w212 stays on the returning box.
+  SCOUTX_DETOUR_SPLIT remains off: enabling it rewrote 222 frames of this window.
+
+E3 - appearance-only choice of a distant player (REFERENCE rendering, w133-153), repaired at selection:
+  The colour score still prefers the distant look-alike, but the piece that ends in a clean hand-off
+  into the verified number read is that read's player. Those frames are LIKELY / anchored on T.
+  SCOUTX_DETOUR_SPLIT stays off.
 
 E4 - one-frame claim on another player after a second crossing (REFERENCE rendering, w211):
-  - At source 2460 (w210) #20 crosses another orange player.
-  - Unrepaired: at w211 the CONFIRMED / number claim sat on that other player (N box, review 2026-11-03).
-  - Mechanism: number tracklet 205 took a merged two-player box at w210 and the other player's box at w211 (no
-    clean #20 detection there), then returned to #20 at w212. That one-frame detour was never cut.
-  The characterisation below asserts that unrepaired state. SCOUTX_DETOUR_SPLIT=1 isolates it; that opt-in is a
-  separate test and is not the release default.
+  Repaired without DETOUR_SPLIT. The opt-in below still isolates the row inside the chain; the
+  publication rule drops it even when that split is off. The opt-in is not the release default,
+  because on this window it also rewrote 222 other frames.
 """
 import json
 import os
@@ -86,20 +82,37 @@ PLAYER_A_PIECE = 38            # w195-197: player A (labelled T in the original 
 
 # ---- P: default decoder, pause-and-resume transfer ---------------------------------------------------------------
 @pytest.mark.parametrize("flag", ["0", "1"])
-def test_P_characterisation_default_claims_player_a_after_pause_and_resume(flag, tmp_path_factory):
+def test_P_pre_gap_target_claims_stay(flag, tmp_path_factory):
+    """The pause is at w192-193. Frames before it stay the anchored target; the repair must not move them."""
     tl = _replay("default_i0225", flag, tmp_path_factory)
-    for w in (195, 196, 197):
+    for w in range(185, 192):
         c = _claim(tl, w)
         assert c and c[0] == "LIKELY_VISIBLE" and iou(c[2], _piece_box(w, PLAYER_A_PIECE)) >= 0.75
 
 
-@pytest.mark.xfail(strict=True, reason="P unrepaired: identity passes to player A when #20's paused track resumes on A")
 @pytest.mark.parametrize("flag", ["0", "1"])
 def test_P_desired_no_claim_on_player_a(flag, tmp_path_factory):
+    """After the hole, the refused rows sit on player A. The published boxes are the other
+    track, on #20 (piece 39). The steal frame w193 is not one of the refused frames, so it
+    stays unclaimed."""
     tl = _replay("default_i0225", flag, tmp_path_factory)
     for w in (195, 196, 197):
         c = _claim(tl, w)
-        assert not (c and c[0] in ("LIKELY_VISIBLE", "CONFIRMED_VISIBLE") and iou(c[2], _piece_box(w, PLAYER_A_PIECE)) >= 0.5)
+        assert c and c[0] == "LIKELY_VISIBLE" and c[1] == "anchored"
+        assert iou(c[2], _piece_box(w, 39)) >= 0.8
+        assert iou(c[2], _piece_box(w, PLAYER_A_PIECE)) < 0.3
+    c = _claim(tl, 193)
+    assert not (c and c[0] in ("LIKELY_VISIBLE", "CONFIRMED_VISIBLE") and iou(c[2], _piece_box(193, PLAYER_A_PIECE)) >= 0.5)
+    c = _claim(tl, 194)
+    assert c and c[0] == "LIKELY_VISIBLE" and iou(c[2], _piece_box(194, PLAYER_A_PIECE)) >= 0.75
+    # The same other track continues while each step still overlaps the previous box.
+    # Piece 39 is that player. The walk stops before the step that leaves the box.
+    for w in range(198, 208):
+        c = _claim(tl, w)
+        assert c and c[0] == "LIKELY_VISIBLE" and c[1] == "reacquired"
+        assert iou(c[2], _piece_box(w, 39)) >= 0.75
+    assert _claim(tl, 208) is None
+    assert _claim(tl, 192) is None and _claim(tl, 193) is None
 
 
 # ---- E3: reference rendering, appearance-only choice of a distant player -----------------------------------------
@@ -115,14 +128,15 @@ def _on_t_label(c, w, thr):
 
 
 @pytest.mark.parametrize("flag", ["0", "1"])
-def test_E3_characterisation_reference_claims_distant_n_player_by_appearance(flag, tmp_path_factory):
+def test_E3_handoff_recovers_the_target(flag, tmp_path_factory):
+    """The piece that hands off into the number read is published on T, not on the distant look-alike."""
     tl = _replay("reference_i0225", flag, tmp_path_factory)
     for w in E3_FRAMES:
         c = _claim(tl, w)
-        assert c and c[0] == "LIKELY_VISIBLE" and c[1] == "appearance" and _on_n_label(c, w, 0.7)
+        assert c and c[0] == "LIKELY_VISIBLE" and c[1] == "anchored"
+        assert _on_t_label(c, w, 0.7) and not _on_n_label(c, w, 0.5)
 
 
-@pytest.mark.xfail(strict=True, reason="E3 unrepaired: appearance classifier prefers a distant player over #20's tracklet")
 @pytest.mark.parametrize("flag", ["0", "1"])
 def test_E3_desired_no_claim_on_n_labelled_player(flag, tmp_path_factory):
     tl = _replay("reference_i0225", flag, tmp_path_factory)
@@ -141,17 +155,16 @@ def test_E3_detour_opt_in_claims_the_target(flag, tmp_path_factory):
 
 # ---- E4: reference rendering, one-frame confirmed claim on another player after a second crossing ------------------
 @pytest.mark.parametrize("flag", ["0", "1"])
-def test_E4_characterisation_confirmed_claim_on_other_player_at_w211(flag, tmp_path_factory):
+def test_E4_neighbours_of_the_detour_stay_off_the_other_player(flag, tmp_path_factory):
     tl = _replay("reference_i0225", flag, tmp_path_factory)
-    c = _claim(tl, 211)
-    assert c and c[0] == "CONFIRMED_VISIBLE" and _on_n_label(c, 211, 0.7)
     nxt = _claim(tl, 212)
     assert nxt and not _on_n_label(nxt, 212, 0.3)
 
 
-@pytest.mark.xfail(strict=True, reason="E4 unrepaired: confirmed claim jumps to another player for one frame at w211")
 @pytest.mark.parametrize("flag", ["0", "1"])
 def test_E4_desired_no_confirmed_claim_on_other_player(flag, tmp_path_factory):
+    """w211 continues neither neighbour (IoU 0.37 and 0.00). It is not published, so the number
+    evidence on the rest of the tracklet cannot confirm the other player for that frame."""
     tl = _replay("reference_i0225", flag, tmp_path_factory)
     c = _claim(tl, 211)
     assert not (c and _on_n_label(c, 211, 0.5))

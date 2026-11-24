@@ -312,6 +312,22 @@ def resolve_identity(summary: list[dict], reads: dict[int, list], target: Target
         unary = dur * (app * rel - PRIOR_LOGODDS) + 12.0 * nt
         for k in anchor_ix:
             unary[k] += 60.0
+        # A fragment that ends in a clean hand-off into a verified sighting is that sighting's
+        # player. The chain's hand-off reward is paid to the verified piece, which is already
+        # chosen, so the fragment keeps the "probably someone else" prior and a distant
+        # look-alike can outrank it. Cancel that prior on the fragment, the same cancellation a
+        # forward hand-off gives its continuation. An unclear contact is not this hand-off.
+        verified = anchor_ix | number_pos
+        contact_owner = {kix[c]: kix[p] for c, p in (contact_pre or {}).items() if c in kix and p in kix}
+        for k in cands:
+            if int(k) in verified:
+                continue
+            if any(_clean_predecessor(int(k), int(s), t0, t1, seg, ps, pe, hmed, fps, link_out, event_posts, contact_owner)
+                   for s in verified):
+                # Prior cancellation plus the same fixed hand-off preference ``_transition`` pays
+                # the continuation. The edge reward lands on the verified piece, so without this
+                # the look-alike's appearance unary still wins the overlap.
+                unary[k] += PRIOR_LOGODDS * float(dur[k]) + 3.0
         unary[~cand_mask] = -np.inf
         chosen, edges = _best_chain(cands, unary, t0, t1, seg, ps, pe, fps, dur, link_out, event_posts)
         # Self-training (until 5.0): very confident chain members became positives.
@@ -529,6 +545,28 @@ def _questions(summary, rows, by_tid, chosen, cands, app, rel, dur, evidence, an
                     "affectedSec": round(float(dur[k]), 1), "value": round(float(value), 2),
                     "options": ["yes", "not_me", "unsure", "skip"]})
     return out
+
+
+def _clean_predecessor(k: int, s: int, t0, t1, seg, ps, pe, hmed, fps, link_out, event_posts, contact_owner) -> bool:
+    """k ends where verified sighting s begins: same shot, at most 0.5 s, at most 0.75 body heights.
+
+    Those are the hand-off limits ``_transition`` already treats as one followed player. A
+    recorded unclear contact between the two pieces is not a hand-off, and neither is a
+    neighbour of a contact whose recorded predecessor is someone else. Panorama points
+    without a height use the tracklet's median box height.
+    """
+    gap = float(t0[s] - t1[k])
+    if gap < -1.5 / fps or gap > 0.5 or seg[s] != seg[k]:
+        return False
+    if contact_owner.get(s, k) != k:
+        return False
+    if link_out and k in link_out and event_posts and s in event_posts.get(k, ()) and not link_out[k].get(s):
+        return False
+    hk = float(pe[k][2]) if len(pe[k]) > 2 else float(hmed[k])
+    hs = float(ps[s][2]) if len(ps[s]) > 2 else float(hmed[s])
+    h = max(0.5 * (hk + hs), 1.0)
+    d = float(np.hypot(float(ps[s][0]) - float(pe[k][0]), float(ps[s][1]) - float(pe[k][1]))) / h
+    return d <= 0.75
 
 
 def _transition(j: int, i: int, t0, t1, seg, ps, pe, fps, dur=None, link_out=None, event_posts=None) -> float:

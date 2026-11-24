@@ -133,7 +133,19 @@ def test_regression_replay_244s_wrong_player_confirmation(tmp_path):
     # that took #20's detection at frame 194; frame 194 carries the only "20" read.
     other = [176, 177, 178, 179, 180, 181, 182, 184, 185, 186, 189, 190, 191]
     base, rec = _replay(tmp_path, "0", detour="0")
-    assert all(rec["matchesOriginal"][k] for k in ("present", "states", "evidence"))   # the faulty baseline
+    # Frame 211 is the unpublished one-frame detour. Frames 127-162 are the hand-off recovery of
+    # the target ahead of the number read. Every other frame still matches the archive, including
+    # the confirmed stretch this test owns.
+    assert rec["matchesOriginal"]["segment"]
+    orig = np.load(REPLAY / "original_timeline.npz")
+    allowed = set(range(127, 163)) | {211}
+    for i in range(len(base["present"])):
+        if i in allowed:
+            continue
+        assert bool(base["present"][i]) == bool(orig["present"][i])
+        assert str(base["states"][i]) == str(orig["states"][i])
+        assert str(base["evidence"][i]) == str(orig["evidence"][i])
+    assert not base["present"][211]
     assert all(str(base["states"][f]) == "CONFIRMED_VISIBLE" and str(base["evidence"][f]) == "number" for f in other)
     cand, _ = _replay(tmp_path, "1", detour="0")
     assert not any(str(cand["states"][f]) == "CONFIRMED_VISIBLE" for f in other)

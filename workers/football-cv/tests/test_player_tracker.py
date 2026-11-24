@@ -144,6 +144,47 @@ def test_identity_links_number_seed_and_excludes_other_numbers():
     assert summary[3]["tid"] in {summary[k]["tid"] for k in res.excluded}
 
 
+def _feat(value: float, n: int = 30) -> np.ndarray:
+    x = np.zeros((n, 80), np.float32)
+    x[:, 0] = value
+    return x
+
+
+def test_verified_handoff_outranks_a_distant_lookalike():
+    """The piece that ends on a number read is that player, even when a same-kit look-alike
+    elsewhere scores higher on appearance. The look-alike overlaps the true piece, so only one
+    can be chosen. The crowd of other tracklets is what makes the rank-normalised appearance
+    score promote the look-alike."""
+    seed = _tracklet(1, 5.1, 5.7, 500, 510, sig=ORANGE, h=300)
+    true = _tracklet(2, 1.4, 5.0, 470, 500, sig=ORANGE, h=140)
+    lookalike = _tracklet(3, 1.5, 2.6, 2000, 2060, sig=ORANGE, h=60)
+    other = _tracklet(4, 5.1, 5.7, 900, 920, sig=ORANGE, h=140)
+    crowd = [_tracklet(10 + i, 30 + i, 31.2 + i, 100, 140, sig=ORANGE, h=100) for i in range(12)]
+    summary = [seed, true, lookalike, other, *crowd]
+    rows, by_tid = _rows_for(summary)
+    feats = {1: _feat(3.0, 40), 2: _feat(0.4), 3: _feat(1.2), 4: _feat(-3.0, 40)}
+    for piece in crowd:
+        feats[piece["tid"]] = _feat(0.0, 12)
+    res = I.resolve_identity(summary, {1: [(52, "20", 0.99, "shirt")]}, I.Target("20", "orange"),
+                             10.0, rows, by_tid, feats=feats)
+    chosen = {summary[k]["tid"] for k in res.chosen}
+    assert 1 in chosen and 2 in chosen
+    assert 3 not in chosen
+    assert res.evidence[summary.index(true)] == "anchored"
+
+
+def test_unclear_contact_is_not_a_verified_handoff():
+    seed = _tracklet(1, 5.1, 6.0, 500, 520, sig=ORANGE)
+    other = _tracklet(2, 0.0, 5.0, 480, 500, sig=ORANGE)
+    summary = [seed, other]
+    rows, by_tid = _rows_for(summary)
+    from scoutx_tracker.crossings import Link
+    res = I.resolve_identity(summary, {1: [(51, "20", 0.99, "shirt")]}, I.Target("20", "orange"),
+                             10.0, rows, by_tid, links=[Link(pre=2, post=1, t=5.05, clear=False, margin=0.0, cost=1.0)])
+    # An unclear contact does not cancel the prior, and the piece is not anchored through it.
+    assert res.evidence.get(1) != "anchored"
+
+
 def test_identity_never_jumps_impossible_distance():
     summary = [_tracklet(1, 0.0, 5.0, 100, 120), _tracklet(2, 5.1, 9.0, 5000, 5020)]
     reads = {1: [(1, "20", 0.99, "shirt")], 2: [(60, "20", 0.99, "shirt")]}
