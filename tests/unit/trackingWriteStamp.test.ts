@@ -27,7 +27,10 @@ function stampOf(f: ReturnType<typeof fakeDb>, path: string) {
 function assertMoved(f: ReturnType<typeof fakeDb>, path: string, before: ReturnType<typeof stampOf>) {
   const after = stampOf(f, path);
   assert.equal(typeof after.at, 'string');
-  assert.notEqual(after.at, before.at);
+  // updatedAt is a millisecond ISO string, so two back-to-back writes may share it. A writer that skipped the
+  // top-level field would leave the seeded OLD value, so that case stays strict; otherwise it must not go backwards.
+  if (before.at === OLD) assert.notEqual(after.at, OLD);
+  else assert.ok(String(after.at) >= String(before.at), 'updatedAt must not move backwards');
   assert.match(String(after.token), /^\d+\.\d{9}$/);
   assert.notEqual(after.token, before.token);
   return after;
