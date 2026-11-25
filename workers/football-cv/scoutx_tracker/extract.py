@@ -37,6 +37,20 @@ from .periods import grass_fraction
 PERSON, BALL = 0, 32
 
 
+def frame_timestamp(index: int, fps: float, t0: float = 0.0) -> float:
+    """Match time of source frame `index`. The source clock is `index / fps`; `t0` is only an offset."""
+    if isinstance(index, bool) or not isinstance(index, int) or index < 0 or fps <= 0:
+        raise ValueError("a frame timestamp needs a non-negative index and a positive rate")
+    return t0 + index / fps
+
+
+def frame_before_end(index: int, fps: float, end: float | None) -> bool:
+    """Half-open source interval. The frame at exactly `end` is not processed."""
+    if end is None:
+        return True
+    return index / fps < end
+
+
 DETECTOR = os.environ.get("SCOUTX_DETECTOR", "yolox_s")
 WEIGHTS_DIR = Path(os.environ.get("SCOUTX_WEIGHTS_DIR", Path.home() / ".cache" / "scoutx" / "weights"))
 # Official YOLOX COCO weights (Apache-2.0), pinned by SHA-256.
@@ -165,10 +179,26 @@ def extract(video: str, out_dir: str, t0: float = 0.0, start: float = 0.0, end: 
         prop = BoxPropagator() if key_every > 1 else None
         prop_flags: list[bool] = []
         last_small: list = [None]
+        risk_previous = None
+        risk_carried = np.zeros((0, 4), np.float32)
+        risk_keyed = False
+        risk_since = 0
+        risk_detected = 0
+        risk_propagated = 0
         # 4.1 batched inference: frames are detected in batches (default 8 on CUDA, 1 on CPU where
         # batching gives no speed-up); everything after detection still runs frame by frame, in order.
         if batch <= 0:
             batch = 8 if det.on_gpu else 1
+        scheduler_name = os.environ.get("SCOUTX_SCHEDULER", "").strip() or "off"
+        if scheduler_name not in ("off", "risk"):
+            raise ValueError(f"unknown scheduler {scheduler_name}")
+        use_risk = scheduler_name == "risk"
+        if use_risk and key_every != 1:
+            raise ValueError("the risk scheduler is not a fixed stride")
+        if use_risk and batch != 1:
+            raise ValueError("the risk scheduler runs one frame at a time")
+        if use_risk:
+            prop = BoxPropagator()
         pending: list[tuple[float, np.ndarray]] = []
 
         def run_batch() -> None:
@@ -257,9 +287,37 @@ def extract(video: str, out_dir: str, t0: float = 0.0, start: float = 0.0, end: 
                 k += 1
                 if (k % stride) != 0:
                     continue
-                t = t0 + k / fps_src
-                if end is not None and k / fps_src >= end:
+                t = frame_timestamp(k, fps_src, t0)
+                if not frame_before_end(k, fps_src, end):
                     break
+                if use_risk:
+                    from .scheduler import decide, frame_gray, perception_signals  # noqa: PLC0415
+
+                    signals = perception_signals(risk_previous, frame, risk_carried, risk_keyed, None)
+                    decision = decide(
+                        signals, risk_since, enabled=True,
+                        camera_class=os.environ.get("SCOUTX_CAMERA_CLASS", "touchline"), policy="risk",
+                    )
+                    risk_previous = frame_gray(frame)
+                    if not decision.full_frame_detect:
+                        _tp = time.perf_counter()
+                        pb, ps = prop.step(frame)
+                        tm["propagate"] += time.perf_counter() - _tp
+                        risk_carried = np.asarray(pb, np.float32).reshape(-1, 4)
+                        risk_since += 1
+                        risk_propagated += 1
+                        consume(t, frame, pb, ps, np.zeros((0, 4), np.float32), np.zeros(0, np.float32), propagated=True)
+                        continue
+                    _tb = time.perf_counter()
+                    pb, ps, bb, bs = det(frame)
+                    tm["detect"] += time.perf_counter() - _tb
+                    prop.key(frame, pb, ps)
+                    risk_carried = np.asarray(pb, np.float32).reshape(-1, 4)
+                    risk_keyed = True
+                    risk_since = 0
+                    risk_detected += 1
+                    consume(t, frame, pb, ps, bb, bs)
+                    continue
                 if prop is not None and batch == 1 and (fi + 1) % key_every != 0:
                     # in-between frame: propagate unless the scene changed (then detect)
                     small = cv2.cvtColor(cv2.resize(frame, (160, 90), interpolation=cv2.INTER_AREA), cv2.COLOR_BGR2HSV)
@@ -284,7 +342,10 @@ def extract(video: str, out_dir: str, t0: float = 0.0, start: float = 0.0, end: 
             cuts=np.array(cuts, np.int64), times=np.array(times, np.float64), grass=np.array(grass, np.float32),
             propagated=np.array(prop_flags, bool),
         )
-        meta = {"video": os.path.abspath(video), "detector": det.name, "keyframeEvery": key_every if prop is not None else 1, "t0": t0, "start": start, "fps": fps, "frames": fi + 1,
+        meta = {"video": os.path.abspath(video), "detector": det.name, "scheduler": scheduler_name,
+                "detectorCalls": risk_detected if use_risk else fi + 1,
+                "propagatedFrames": risk_propagated if use_risk else int(sum(prop_flags)),
+                "keyframeEvery": 1 if use_risk else (key_every if prop is not None else 1), "t0": t0, "start": start, "fps": fps, "frames": fi + 1,
                 "width": width, "height": height, "seconds": round(time.time() - t_start, 1),
                 "stageSeconds": {k: round(v, 2) for k, v in tm.items()}}
         (out / "meta.json").write_text(json.dumps(meta, indent=2))

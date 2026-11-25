@@ -72,6 +72,20 @@ def accuracy(claims: list, gt: dict, size: tuple[int, int], gt_size: tuple[int, 
 
 # ---------------------------------------------------------------- label time basis
 
+def select_time_basis(alignment: dict[float, float]) -> float:
+    """Choose a label-time shift from non-target box alignment only.
+
+    `alignment` maps a shift in seconds to the median IoU of boxes that are not the target.
+    The target's own score is not an input, so the basis cannot be picked because it raises recall.
+    Equal alignment keeps the stored times.
+    """
+    if not alignment or 0.0 not in alignment:
+        raise ValueError("time-basis alignment needs the stored basis and at least one shift")
+    if any(not math.isfinite(value) for value in alignment.values()):
+        raise ValueError("time-basis alignment must be finite")
+    return max(alignment, key=lambda shift: (alignment[shift], -abs(shift)))
+
+
 def apply_time_basis(gt: dict, corrections: dict) -> dict:
     """Copy of interval ground truth with label TIMES shifted per `corrections`
     (bench/references/gt_time_basis_corrections.json). Boxes and labels are never changed, so a claim on

@@ -226,3 +226,77 @@ ONNX Runtime 1.29.0 is installed in `.local/engine7/onnx-venv` only. The develop
 A real session's recovery log was empty after `release_job()`. Production still constructs a detector per `extract()` call.
 
 Docker Desktop was started. The engine reported 29.9.3. C: had 337 GB free. The local image `pitchproof-tracker-cpu:measure` is `sha256:7513e604bcb9…`, not the historical digest. The registry refused the exact image because billing is disabled on project 315202089837. Billing was not enabled. A full replay on this PC is about 0.418 s of detector time per frame, against 0.191 s on the historical machine, so the 2,035 s recording would take more than the two-hour limit even after the image is available. It was not started. Neither gate was re-run. The 0.706 candidate stays rejected. Production CV stays off.
+
+## Engine 7.7, 2026-11-25
+
+Measured against `3bfca5e` before this commit. Production CV stays off. Neither gate was edited or re-run. The 0.706 candidate stays rejected. Phase 18 was not modified. Billing was not enabled and the historical pull was not retried. No GPU package was installed and no paid instance was started. No interval outside 1,150.0–1,180.0 s was decoded.
+
+### Timestamp convention
+
+`frame_timestamp` is `t0 + index / fps`. `frame_before_end` is half-open on source time: frame 11800 at 10 fps is exactly 1,180 s and is excluded. The stored labels for intervals at or after 1,150 s sit 0.1 s early of the boxes. `select_time_basis` chooses the shift with the higher median IoU of N boxes only. Target score is not an input. A tie keeps 0.0. On this fresh extraction the N-box median IoU is 0.6469 at 0.0 and 0.9099 at +0.1 s, so the selected shift is +0.1 s. Both bases stay in every score file. The same shift is used for every candidate. Report: `.local/engine7/window-1150-1180/difference.json`.
+
+### Local acceptance, declared before the combined score
+
+Wrong-identity duration must not exceed the PyTorch every-frame reference. Existing publication rules stay. Claimed recall must not fall materially. Propagation and orchestration time count. A pass on this window is not a gate and does not enable production CV.
+
+### Factorial, one window, corrected +0.1 s
+
+Source hash `b1077af3…fb679c`. Model `yolox_s.1280.onnx` SHA-256 `aa655d915326e68dc6fca9638aa8b7ccae27d412f0100a4b3f8c6d46c2e64862`. Weights `f55ded71…913a30`. Resolution 1,280. Provider `CPUExecutionProvider`. No owner anchor.
+
+| | A PyTorch every frame | B PyTorch risk | C ONNX every frame | D ONNX risk |
+|---|---|---|---|---|
+| Extract | existing reference | detections reused, not a fresh wall | fresh | fresh |
+| Detector calls | 300 | 165 | 300 | 165 |
+| Propagated frames | 0 | 135 | 0 | 135 |
+| Detect | 125.5 s | not remeasured | 87.84 s | 48.53 s |
+| Propagate | 0 | inside a 7.3 s replay script | 0 | 1.09 s |
+| Decode | 1.59 s | not a fresh extract | 1.62 s | 1.50 s |
+| Extract wall | 137.5 s | not a stopwatch | 105.17 s | 66.891 s |
+| Extract process CPU | not recorded | not a stopwatch | 1,098.516 s | 623.547 s |
+| Extract peak RSS | not recorded | not a stopwatch | 717,385,728 | 719,519,744 |
+| OCR calls | 305 | 238 | 305 | 238 |
+| OCR time | 35.8 s | not split the same way | 33.7 s | 32.9 s |
+| Identity time | 20.9 s | not split the same way | 18.9 s | 12.3 s |
+| Resolve wall | 57.359 s | 43.39 s | 53.261 s | 45.753 s |
+| Resolve process CPU | 382.828 s | 284.703 s | 360.984 s | 294.672 s |
+| Complete wall | 194.859 s | not measured | 158.431 s | 112.644 s |
+| Claimed recall | 0.571 | 0.617 | 0.571 | 0.617 |
+| IDF1 | 0.727 | 0.763 | 0.727 | 0.763 |
+| Confirmed-correct | 12.7 s | 15.1 s | 12.7 s | 15.1 s |
+| Wrong identity | 0 | 0 | 0 | 0 |
+| Unclaimed visible | 123 / 287 | 110 / 287 | 123 / 287 | 110 / 287 |
+| Switches | 0 | 0 | 0 | 0 |
+
+Stored basis for C matches A (recall 0.547, IDF1 0.707, confirmed-correct 12.5 s, wrong 0). Stored basis for D matches B (recall 0.575, IDF1 0.730, confirmed-correct 14.4 s, wrong 0). Full-number reads: A and C are `20`×6 and `19`×6. B and D are `20`×8 and `19`×6, plus one `72` and two `17`. Lone digits were kept. The moments check still fails because the slice is not a full-match highlight window.
+
+ONNX every-frame identity matches PyTorch every-frame on this window. ONNX risk matches PyTorch risk. The identity change is the scheduler. The speed change is both. Measured detector time falls from 87.84 s to 48.53 s when the same ONNX session skips 135 frames, and propagation adds 1.09 s. That is a stopwatch, not 135 times a PyTorch per-frame rate. The earlier 56.5 s figure remains a calculation from the PyTorch reference and is not cell D. Process CPU is higher under ONNX because the runtime was not pinned to four threads. Peak RSS did not fall. No dollar saving is claimed.
+
+Cell D meets the local contract: wrong identity stays 0, recall rises from 0.571 to 0.617, complete wall falls from 194.859 s to 112.644 s. It is one development window.
+
+### Why the scheduler changed recall
+
+Against the PyTorch every-frame claims, the risk claims gain 29 labelled frames (1,163.9–1,166.7 s) and lose 16 (1,159.9–1,161.4 s). Net +13. 148 frames stay correct and 94 stay unclaimed. Only 8 of the 29 gains were fully propagated frames, so the gain is mostly a change in the detections that the tracker, OCR and association then see, not the optical-flow box standing in as the claim. The same pattern appears when the detector is ONNX. This is not yet shown on a second recording.
+
+### Unclaimed labels
+
+Of the 110 corrected visible labels the risk candidate did not claim, 109 had a reference detection at IoU ≥ 0.5 and 1 had none. None was a wrong-player claim. The lost time is unpublished identity, not a missed player. Thresholds were not relaxed. Full-number `19` reads were kept.
+
+Resolve time falls with OCR count (305 to 238 reads; numbers remain the largest stage, about 33–36 s). No crop-selection policy and no identity-graph change was shipped. Scaling beyond 30 s was not measured.
+
+### Integration
+
+`extract()` still detects every frame unless `SCOUTX_SCHEDULER=risk`. Unknown values raise. Risk requires keyframe every 1 and batch 1, calls the existing propagator, and records `detectorCalls` and `propagatedFrames`. It does not import `experimental_run`. An explicit `SCOUTX_ORT_PROVIDERS` value that is not the session's first provider drops the session and raises. Unset or `auto` still allows the historical CPU fallback. Default execution was not switched. `select_time_basis` is tested, including the tie that keeps 0.0. `pytest` on the foundation and experimental suites: 24 passed in 3.38 s.
+
+Not done, and not described as done: a second real job through one reused production session, shared discovery and extraction decode, durable cloud orchestration, an OCR selection change, and any GPU run. `experimentalOrchestration` remains in-memory and unregistered.
+
+### Held-out windows, frozen and not decoded
+
+Development window, already used, not to be the only tuning target: 1,150–1,180 s. Held-out labels already in `bench/results/5.1/gt_img4809_intervals.json`, same proxy, same number 20, not authorised for this session: 225–255, 400–430, 600–630, 1,295–1,325, 1,500–1,530, 1,680–1,710, 1,800–1,830, 1,890–1,920 s. Each is 300 frames at 10 fps. A combined ONNX risk pass is on the order of two minutes of wall per window on this PC, from the 112.6 s measurement, plus identity scoring. Stop if wrong-identity duration exceeds the matching every-frame run or if a window exceeds about 15 minutes. Do not use those labels as anchors.
+
+### GPU FP32 proposal, not launched
+
+Official ONNX Runtime CUDA provider table: `onnxruntime-gpu` 1.29.x on PyPI is built with CUDA 13.0 and cuDNN 9.x, and requires CUDA 13.0 or newer. A separate CUDA 12.x package for 1.27–1.30 is built with CUDA 12.8. Source: https://onnxruntime.ai/docs/execution-providers/CUDA-ExecutionProvider.html. Do not install either package into `.local/engine7/onnx-venv`. The experiment, if approved, is the same eight decoded frames at 1,150 s, the same ONNX file, identical preprocessed tensors, FP32, batch 1, then a controlled batch. Fail if `CUDAExecutionProvider` is absent from `session.providers`. No FP16 until that comparison exists. No region, instance, or cost is selected here because no GPU was authorised.
+
+### Local development reference
+
+This PC, parent commit `3bfca5e`, Python 3.12.10, torch 2.8.0+cpu, onnxruntime 1.29.0 in the dedicated venv, OpenCV decode, four-thread parity was a separate microbench. It is not the historical CPU8 image and it does not replace either gate.

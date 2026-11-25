@@ -8,6 +8,7 @@ from pathlib import Path
 import pytest
 
 from scoutx_tracker.colour import ColourInfo, working_space_filter
+from scoutx_tracker.extract import frame_before_end, frame_timestamp
 from scoutx_tracker.ladder import Proposal, review
 from scoutx_tracker.preparation import (
     PREP_ENV,
@@ -32,8 +33,29 @@ ORIGINAL = SourceDescriptor(
 def test_extract_defaults_stay_on_the_current_decoder_and_every_frame():
     assert 'os.environ.get("SCOUTX_DECODER", "cv2")' in EXTRACT
     assert 'os.environ.get("SCOUTX_KEYFRAME_EVERY", "1")' in EXTRACT
+    assert 'os.environ.get("SCOUTX_SCHEDULER", "").strip() or "off"' in EXTRACT
     assert "preparation" not in EXTRACT
-    assert "scheduler" not in EXTRACT
+    assert "if use_risk:" in EXTRACT
+
+
+def test_frame_clock_is_half_open_and_uses_the_source_rate():
+    assert frame_timestamp(0, 10) == 0
+    assert frame_timestamp(11500, 10, 0) == 1150
+    assert frame_timestamp(1, 29.997) == pytest.approx(1 / 29.997)
+    assert frame_before_end(11799, 10, 1180) is True
+    assert frame_before_end(11800, 10, 1180) is False
+    assert frame_before_end(0, 10, None) is True
+    with pytest.raises(ValueError):
+        frame_timestamp(-1, 10)
+    bench = Path(__file__).resolve().parents[1] / "bench"
+    sys_path = __import__("sys").path
+    if str(bench) not in sys_path:
+        sys_path.insert(0, str(bench))
+    import pp_bench
+    # The published non-target alignment, not a target-recall comparison.
+    assert pp_bench.select_time_basis({0.0: 0.65, 0.1: 0.913}) == 0.1
+    assert pp_bench.select_time_basis({0.0: 0.887, 0.1: 0.70}) == 0.0
+    assert pp_bench.select_time_basis({0.0: 0.9, 0.1: 0.9}) == 0.0
 
 
 def test_hlg_working_filter_is_explicit_and_is_not_the_default_extractor_path():

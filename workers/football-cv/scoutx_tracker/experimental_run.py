@@ -20,10 +20,7 @@ from scoutx_tracker.ladder import Proposal, review
 from scoutx_tracker.preparation import SourceDescriptor, StreamError, open_working_stream
 from scoutx_tracker.propagate import BoxPropagator
 from scoutx_tracker.recording_assessment import assess
-from scoutx_tracker.scheduler import decide
-
-SCENE_MEAN_ABS = 8.0
-OVERLAP_IOU = 0.25
+from scoutx_tracker.scheduler import OVERLAP_IOU, SCENE_MEAN_ABS, box_iou, decide, frame_gray, perception_signals
 OCR_SHARPNESS = 30.0
 SCHEMA = "pitchproof.experimental-run.v1"
 
@@ -53,20 +50,15 @@ class RunState:
 
 
 def _gray(frame: np.ndarray) -> np.ndarray:
-    small = cv2.resize(frame, (32, 18), interpolation=cv2.INTER_AREA)
-    if small.ndim == 3:
-        return cv2.cvtColor(small, cv2.COLOR_BGR2GRAY)
-    return small
+    return frame_gray(frame)
 
 
 def _iou(a: np.ndarray, b: np.ndarray) -> float:
-    x1, y1 = max(float(a[0]), float(b[0])), max(float(a[1]), float(b[1]))
-    x2, y2 = min(float(a[2]), float(b[2])), min(float(a[3]), float(b[3]))
-    inter = max(0.0, x2 - x1) * max(0.0, y2 - y1)
-    area = max(0.0, float(a[2] - a[0])) * max(0.0, float(a[3] - a[1]))
-    other = max(0.0, float(b[2] - b[0])) * max(0.0, float(b[3] - b[1]))
-    union = area + other - inter
-    return inter / union if union else 0.0
+    return box_iou(a, b)
+
+
+def _signals(previous, frame, boxes, has_key, anchor=None):
+    return perception_signals(previous, frame, boxes, has_key, anchor)
 
 
 def _invoke(detector, frame: np.ndarray, imgsz: int | None):
@@ -99,34 +91,6 @@ def _target_index(boxes: np.ndarray, anchor: tuple[float, float, float, float] |
     overlaps = [_iou(box, np.asarray(anchor, np.float32)) for box in boxes]
     best = int(np.argmax(overlaps))
     return best if overlaps[best] >= OVERLAP_IOU else None
-
-
-def _signals(previous: np.ndarray | None, frame: np.ndarray, boxes: np.ndarray, has_key: bool,
-             anchor: tuple[float, float, float, float] | None = None) -> set[str]:
-    signals: set[str] = set()
-    current = _gray(frame)
-    if previous is not None and float(np.abs(previous.astype(np.int16) - current.astype(np.int16)).mean()) >= SCENE_MEAN_ABS:
-        signals.add("scene_change")
-    if not has_key:
-        signals.add("poor_propagation")
-    target = _target_index(boxes, anchor)
-    target_hit = False
-    other_hit = False
-    for index in range(len(boxes)):
-        for other in range(index + 1, len(boxes)):
-            if _iou(boxes[index], boxes[other]) < OVERLAP_IOU:
-                continue
-            if target is not None and (index == target or other == target):
-                target_hit = True
-            else:
-                other_hit = True
-    if target_hit or other_hit:
-        signals.add("similar_kit_crossing")
-    if target_hit:
-        signals.add("target_overlap")
-    elif other_hit:
-        signals.add("unrelated_overlap")
-    return signals
 
 
 def _legible(crop: np.ndarray) -> bool:

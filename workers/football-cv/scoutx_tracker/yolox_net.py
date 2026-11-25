@@ -297,6 +297,8 @@ class OnnxDetector:
     The ONNX file is exported once next to the weights (derived from the hash-checked weights)."""
 
     def __init__(self, variant: str, weights: str | Path, imgsz: int = 1280, threads: int = 0) -> None:
+        import os  # noqa: PLC0415
+
         import onnxruntime as ort  # noqa: PLC0415
 
         path = Path(weights).with_suffix(f".{imgsz}.onnx")
@@ -316,6 +318,12 @@ class OnnxDetector:
             ort.preload_dlls()
         self.sess = ort.InferenceSession(str(path), so, providers=providers)
         self.providers = self.sess.get_providers()
+        requested = os.environ.get("SCOUTX_ORT_PROVIDERS", "auto")
+        if requested not in ("", "auto"):
+            first = requested.split(",")[0].strip()
+            if not self.providers or self.providers[0] != first:
+                self.sess = None
+                raise RuntimeError(f"requested {first} but the session started on {self.providers}; refusing to substitute another provider")
         self.on_gpu = self.providers[0] in ("CUDAExecutionProvider", "TensorrtExecutionProvider")
         self.imgsz = imgsz
         self.name = f"{variant}@{imgsz}/onnx" + ("-cuda" if self.on_gpu else "")

@@ -1,4 +1,4 @@
-"""Risk-aware perception schedule. Default off, and not called by extract().
+"""Risk-aware perception schedule. Off unless SCOUTX_SCHEDULER=risk.
 
 Off means the current pipeline: detect every working frame, and do not add OCR, appearance,
 high-resolution recovery or ball detection from this module.
@@ -11,6 +11,9 @@ was visible.
 from __future__ import annotations
 
 from dataclasses import dataclass
+
+import cv2
+import numpy as np
 
 ESCALATIONS = frozenset({
     "scene_change",
@@ -99,5 +102,58 @@ def decide(signals: set[str] | frozenset[str], frames_since_full: int, *, enable
         )
     return ScheduleDecision(
         False, False, False, False, False, "ball_requested" in signals, "cheap", "continuity_holds",
-        "not_guaranteed", False, 640 if policy == "target_dynamic" else None,
+        "not_guaranteed", False,             640 if policy == "target_dynamic" else None,
     )
+
+
+SCENE_MEAN_ABS = 8.0
+OVERLAP_IOU = 0.25
+
+
+def frame_gray(frame: np.ndarray) -> np.ndarray:
+    small = cv2.resize(frame, (32, 18), interpolation=cv2.INTER_AREA)
+    if small.ndim == 3:
+        return cv2.cvtColor(small, cv2.COLOR_BGR2GRAY)
+    return small
+
+
+def box_iou(a: np.ndarray, b: np.ndarray) -> float:
+    x1, y1 = max(float(a[0]), float(b[0])), max(float(a[1]), float(b[1]))
+    x2, y2 = min(float(a[2]), float(b[2])), min(float(a[3]), float(b[3]))
+    inter = max(0.0, x2 - x1) * max(0.0, y2 - y1)
+    area = max(0.0, float(a[2] - a[0])) * max(0.0, float(a[3] - a[1]))
+    other = max(0.0, float(b[2] - b[0])) * max(0.0, float(b[3] - b[1]))
+    union = area + other - inter
+    return inter / union if union else 0.0
+
+
+def perception_signals(previous: np.ndarray | None, frame: np.ndarray, boxes: np.ndarray, has_key: bool,
+                       anchor: tuple[float, float, float, float] | None = None) -> set[str]:
+    signals: set[str] = set()
+    current = frame_gray(frame)
+    if previous is not None and float(np.abs(previous.astype(np.int16) - current.astype(np.int16)).mean()) >= SCENE_MEAN_ABS:
+        signals.add("scene_change")
+    if not has_key:
+        signals.add("poor_propagation")
+    target = None
+    if anchor is not None and len(boxes):
+        overlaps = [box_iou(box, np.asarray(anchor, np.float32)) for box in boxes]
+        best = int(np.argmax(overlaps))
+        target = best if overlaps[best] >= OVERLAP_IOU else None
+    target_hit = False
+    other_hit = False
+    for index in range(len(boxes)):
+        for other in range(index + 1, len(boxes)):
+            if box_iou(boxes[index], boxes[other]) < OVERLAP_IOU:
+                continue
+            if target is not None and (index == target or other == target):
+                target_hit = True
+            else:
+                other_hit = True
+    if target_hit or other_hit:
+        signals.add("similar_kit_crossing")
+    if target_hit:
+        signals.add("target_overlap")
+    elif other_hit:
+        signals.add("unrelated_overlap")
+    return signals
